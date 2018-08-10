@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_fragment_background"
     android:orientation="vertical"
-    tools:context=".SignInFragment">
+    tools:context=".SignUpFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="@string/sign_in"
+        android:text="@string/sign_up"
         android:textColor="@color/design_default_color_primary"
         android:textSize="18sp" />
 
@@ -21,6 +21,19 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:orientation="vertical">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/signInUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/username"
+                android:inputType="textEmailAddress" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -48,13 +61,26 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/signInPasswordConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/passwordconfirm"
+                android:inputType="textPassword" />
+
+        </android.support.design.widget.TextInputLayout>
+
         <Button
-            android:id="@+id/loginSignInBtn"
-            style="@style/Base.Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/loginSignUpBtn"
             android:layout_gravity="end"
-            android:text="@string/sign_in" />
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:text="@string/sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -63,39 +89,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/new_user" />
-
-            <Button
-                android:id="@+id/signInSignUpBtn"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="@string/sign_up"
-                android:textColor="@color/design_default_color_primary" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/forgot" />
+                android:text="@string/al_user" />
 
             <Button
                 style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 android:lines="1"
-                android:text="@string/recover"
+                android:text="@string/sign_in"
                 android:textColor="@color/design_default_color_primary" />
 
         </LinearLayout>
 
     </LinearLayout>
-
 </LinearLayout>
