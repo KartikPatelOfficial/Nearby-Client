@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Nearby</string>
+    <string name="signin">SIGN IN</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="new_user">New user?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="forgot">Forgot your password?</string>
+    <string name="recover">Recover</string>
+
 </resources>
