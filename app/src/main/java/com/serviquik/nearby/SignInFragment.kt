@@ -1,5 +1,6 @@
 package com.serviquik.nearby
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +22,13 @@ class SignInFragment : Fragment() {
             ft.addToBackStack("RootFragment")
             ft.commit()
 
+        }
+
+        val signInBtn:Button = view.findViewById(R.id.loginSignInBtn)
+
+        signInBtn.setOnClickListener {
+            startActivity(Intent(activity,MainActivity::class.java))
+            activity!!.finish()
         }
 
         return view

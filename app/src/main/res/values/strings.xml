@@ -11,5 +11,14 @@
     <string name="sign_in">Sign In</string>
     <string name="username">Username</string>
     <string name="passwordconfirm">Confirm Password</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="add_customer">Add Customer</string>
+    <string name="my_customer">My Customer</string>
+    <string name="add_item">Add Item</string>
+    <string name="add_product">Add Product</string>
+    <string name="profiler">Profiler</string>
+    <string name="offer">Offer</string>
+    <string name="manage_customer">Manage Customer</string>
+    <string name="manage_Product">Manage Product</string>
 
 </resources>
