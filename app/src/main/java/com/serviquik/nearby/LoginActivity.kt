@@ -24,8 +24,11 @@ import com.example.easywaylocation.EasyWayLocation.LOCATION_SETTING_REQUEST_CODE
 class LoginActivity : AppCompatActivity(), Listener {
 
     var easyWayLocation: EasyWayLocation? = null
-    private var lat: Double? = null
-    private var long: Double? = null
+
+    companion object {
+        var lat: Double? = null
+        var long: Double? = null
+    }
 
     private val signIn = 69
 
