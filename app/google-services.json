@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "427183693289",
+    "firebase_url": "https://nearby0serviquik.firebaseio.com",
+    "project_id": "nearby0serviquik",
+    "storage_bucket": "nearby0serviquik.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427183693289:android:1adde7bff4e4d3ff",
+        "android_client_info": {
+          "package_name": "com.serviquik.nearby"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "427183693289-ipvsqck168sup2k71utu3m3dfvqsblcv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.serviquik.nearby",
+            "certificate_hash": "440188cbbc57c396640a3b58c22a0836dd220a7a"
+          }
+        },
+        {
+          "client_id": "427183693289-b2e5caon7rmunqsstqtn436qqu98cqh6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWoIjex2Cugbe53xHzpz6f2cR7QD-vx-8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "427183693289-b2e5caon7rmunqsstqtn436qqu98cqh6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
