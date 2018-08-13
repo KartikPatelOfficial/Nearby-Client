@@ -40,13 +40,14 @@ class LoginActivity : AppCompatActivity(), Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mAuth = FirebaseAuth.getInstance()
-        //Todo Pass user to mainactivity if user already sign in
-
+        if (mAuth.currentUser != null) {
+            startMainActivity()
+        }
         setContentView(R.layout.activity_login)
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        }else{
+        } else {
             easyWayLocation = EasyWayLocation(this)
             easyWayLocation!!.setListener(this)
         }
@@ -101,12 +102,16 @@ class LoginActivity : AppCompatActivity(), Listener {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         //Todo: Add data to database
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
+                        startMainActivity()
                     } else {
                         Toast.makeText(this, task.exception!!.localizedMessage, Toast.LENGTH_LONG).show()
                     }
                 }
+    }
+
+    private fun startMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     override fun locationCancelled() {

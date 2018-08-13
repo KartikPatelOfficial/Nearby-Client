@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/drawerOrderList"
+        android:icon="@drawable/ic_reorder_black_24dp"
+        android:title="@string/order_list" />
+
+    <item
+        android:id="@+id/drawerManageCustomer"
+        android:icon="@drawable/ic_person_pin_black_24dp"
+        android:title="@string/manage_customer" />
+
+    <item
+        android:id="@+id/drawerManageProduct"
+        android:icon="@drawable/ic_class_black_24dp"
+        android:title="@string/manage_Product" />
+
+    <item
+        android:id="@+id/drawerReviews"
+        android:icon="@drawable/ic_rate_review_black_24dp"
+        android:title="@string/review" />
+
+    <item
+        android:id="@+id/drawerOffer"
+        android:icon="@drawable/ic_local_offer_black_24dp"
+        android:title="@string/offer" />
+
+
+</menu>

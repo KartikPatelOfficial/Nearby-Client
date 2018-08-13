@@ -20,5 +20,11 @@
     <string name="offer">Offer</string>
     <string name="manage_customer">Manage Customer</string>
     <string name="manage_Product">Manage Product</string>
+    <string name="order_list">Order List</string>
+    <string name="review">Reviews</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
 
 </resources>
