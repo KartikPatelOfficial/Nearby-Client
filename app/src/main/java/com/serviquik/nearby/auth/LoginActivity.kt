@@ -1,4 +1,4 @@
-package com.serviquik.nearby
+package com.serviquik.nearby.auth
 
 import android.Manifest
 import android.content.Intent
@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.EasyWayLocation.LOCATION_SETTING_REQUEST_CODE
+import com.serviquik.nearby.MainActivity
+import com.serviquik.nearby.R
 
 
 class LoginActivity : AppCompatActivity(), Listener {

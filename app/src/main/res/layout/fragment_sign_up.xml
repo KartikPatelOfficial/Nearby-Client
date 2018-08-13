@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/login_fragment_background"
     android:orientation="vertical"
-    tools:context=".SignUpFragment">
+    tools:context=".auth.SignUpFragment">
 
     <TextView
         android:layout_width="match_parent"
