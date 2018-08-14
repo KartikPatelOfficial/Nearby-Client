@@ -1,12 +1,15 @@
 package com.serviquik.nearby.auth
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.startActivity
 import android.widget.Toast
 import com.example.easywaylocation.Listener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -19,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.EasyWayLocation.LOCATION_SETTING_REQUEST_CODE
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.serviquik.nearby.MainActivity
 import com.serviquik.nearby.R
 
@@ -30,6 +35,24 @@ class LoginActivity : AppCompatActivity(), Listener {
     companion object {
         var lat: Double? = null
         var long: Double? = null
+
+        fun addDataToDatabase(userName: String, email: String, lat: Double?, lon: Double?, addLine1: String, addLine2: String, category: String, phoneNumber: String, context: Context, activity: FragmentActivity?,title:String) {
+            val db = FirebaseFirestore.getInstance()
+
+            val data = HashMap<String, Any?>()
+            data["Address1"] = addLine1
+            data["Address2"] = addLine2
+            data["Category"] = category
+            data["Location"] = GeoPoint(lat!!, lon!!)
+            data["Name"] = userName
+            data["Number"] = phoneNumber
+            data["Email"] = email
+
+            db.collection("Vendors").document().set(data).addOnCompleteListener {
+                startActivity(context, Intent(context, MainActivity::class.java), null)
+                activity!!.finish()
+            }
+        }
     }
 
     private val signIn = 69

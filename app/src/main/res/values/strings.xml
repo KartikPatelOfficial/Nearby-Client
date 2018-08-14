@@ -35,5 +35,6 @@
     <string name="address_line_2">Address Line 2</string>
     <string name="next">Next</string>
     <string name="category">Category</string>
+    <string name="title">Title</string>
 
 </resources>

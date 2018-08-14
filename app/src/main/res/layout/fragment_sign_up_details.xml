@@ -40,6 +40,19 @@
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/signUpDetailsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title"
+                android:inputType="textPostalAddress" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
                 android:id="@+id/signUpDetailsAddline1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

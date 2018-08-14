@@ -1,7 +1,6 @@
 package com.serviquik.nearby.auth
 
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -13,8 +12,6 @@ import android.widget.EditText
 import android.widget.Spinner
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
-import com.serviquik.nearby.MainActivity
 import com.serviquik.nearby.R
 import android.widget.ArrayAdapter
 
@@ -31,6 +28,7 @@ class SignUpDetailsFragment : Fragment() {
         val numberEt = view.findViewById<EditText>(R.id.signUpDetailPhone)
         val addLine1ET = view.findViewById<EditText>(R.id.signUpDetailsAddline1)
         val addLine2ET = view.findViewById<EditText>(R.id.signUpDetailsAddline2)
+        val titleET = view.findViewById<EditText>(R.id.signUpDetailsTitle)
         spinner = view.findViewById(R.id.signUpDetailSpinner)
 
         FirebaseFirestore.getInstance().collection("Categories").get().addOnCompleteListener {
@@ -49,42 +47,26 @@ class SignUpDetailsFragment : Fragment() {
                     addLine1ET.text.toString(),
                     addLine2ET.text.toString(),
                     spinner.selectedItem.toString(),
-                    numberEt.text.toString()
+                    numberEt.text.toString(),
+                    titleET.text.toString()
             )
         }
 
         return view
     }
 
-    private fun signUpUser(email: String, password: String, userName: String, addLine1: String, addLine2: String, category: String, phoneNumber: String) {
+    private fun signUpUser(email: String, password: String, userName: String, addLine1: String, addLine2: String, category: String, phoneNumber: String, title: String) {
 
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 val lat = LoginActivity.lat
                 val lon = LoginActivity.long
-                addDataToDatabase(userName, email, lat, lon, addLine1, addLine2, category, phoneNumber)
+                LoginActivity.addDataToDatabase(userName, email, lat, lon, addLine1, addLine2, category, phoneNumber, context!!, activity, title)
             } else {
                 AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
             }
         }
     }
 
-    private fun addDataToDatabase(userName: String, email: String, lat: Double?, lon: Double?, addLine1: String, addLine2: String, category: String, phoneNumber: String) {
-        val db = FirebaseFirestore.getInstance()
-
-        val data = HashMap<String, Any?>()
-        data["Address1"] = addLine1
-        data["Address2"] = addLine2
-        data["Category"] = category
-        data["Location"] = GeoPoint(lat!!, lon!!)
-        data["Name"] = userName
-        data["Number"] = phoneNumber
-        data["Email"] = email
-
-        db.collection("Vendors").document().set(data).addOnCompleteListener {
-            startActivity(Intent(context!!, MainActivity::class.java))
-            activity!!.finish()
-        }
-    }
 
 }
