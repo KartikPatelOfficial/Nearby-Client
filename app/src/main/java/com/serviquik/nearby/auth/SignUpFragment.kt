@@ -25,43 +25,34 @@ class SignUpFragment : Fragment() {
         val emailET = view.findViewById<EditText>(R.id.signUpEmail)
         val passwordET = view.findViewById<EditText>(R.id.signUpPassword)
         val confirmPasswordET = view.findViewById<EditText>(R.id.signUpPasswordConfirm)
-        val signUpBtn = view.findViewById<Button>(R.id.loginSignUpBtn)
+        val nextBtn = view.findViewById<Button>(R.id.loginNextBtn)
 
-        signUpBtn.setOnClickListener {
+        nextBtn.setOnClickListener {
             val email = emailET.text.toString()
             val password = passwordET.text.toString()
             val confirmPassword = confirmPasswordET.text.toString()
             val userName = usernameET.text.toString()
 
             if (password == confirmPassword) {
-                signUpUser(email, password, userName)
+
+                val bundle = Bundle()
+                bundle.putString("Email", email)
+                bundle.putString("Password", password)
+                bundle.putString("Username", userName)
+
+                val fragment = SignUpDetailsFragment()
+                fragment.arguments = bundle
+
+                val ft = fragmentManager!!.beginTransaction()
+                ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
+                ft.replace(R.id.LoginFramLayout, fragment, "NewFragment")
+                ft.addToBackStack("RootFragment")
+                ft.commit()
             }
 
         }
 
         return view
-    }
-
-    private fun signUpUser(email: String, password: String, userName: String) {
-
-        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-            if (it.isSuccessful){
-                //Todo update Database
-                val lat = LoginActivity.lat
-                val lon = LoginActivity.long
-
-                Toast.makeText(context,"OK",Toast.LENGTH_SHORT).show()
-
-                addDataToDatabase(userName,email,lat,lon)
-
-            }else{
-                AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
-            }
-        }
-    }
-
-    private fun addDataToDatabase(userName: String, email: String, lat: Double?, lon: Double?) {
-        Log.d("---->","Username : $userName \n Email : $email \n lat : $lat \n Lon : $lon")
     }
 
 

@@ -30,5 +30,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="edit">Edit</string>
+    <string name="phone">Phone</string>
+    <string name="address_line_1">Address Line 1</string>
+    <string name="address_line_2">Address Line 2</string>
+    <string name="next">Next</string>
+    <string name="category">Category</string>
 
 </resources>

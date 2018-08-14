@@ -31,7 +31,6 @@ class SignInFragment : Fragment() {
             ft.replace(R.id.LoginFramLayout, SignUpFragment(), "NewFragment")
             ft.addToBackStack("RootFragment")
             ft.commit()
-
         }
 
         signInBtn.setOnClickListener {

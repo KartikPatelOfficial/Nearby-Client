@@ -25,7 +25,7 @@ import com.serviquik.nearby.R
 
 class LoginActivity : AppCompatActivity(), Listener {
 
-    var easyWayLocation: EasyWayLocation? = null
+    private var easyWayLocation: EasyWayLocation? = null
 
     companion object {
         var lat: Double? = null
