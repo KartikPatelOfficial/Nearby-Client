@@ -36,5 +36,7 @@
     <string name="next">Next</string>
     <string name="category">Category</string>
     <string name="title">Title</string>
+    <string name="profile">Profile</string>
+    <string name="logout">Logout</string>
 
 </resources>

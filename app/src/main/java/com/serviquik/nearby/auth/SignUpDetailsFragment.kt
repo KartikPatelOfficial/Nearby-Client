@@ -57,6 +57,8 @@ class SignUpDetailsFragment : Fragment() {
 
     private fun signUpUser(email: String, password: String, userName: String, addLine1: String, addLine2: String, category: String, phoneNumber: String, title: String) {
 
+        AlertDialog.Builder(context!!).setTitle("Loading").setMessage("Registering your detail. Thease may take some while").setCancelable(false).show()
+
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 val lat = LoginActivity.lat

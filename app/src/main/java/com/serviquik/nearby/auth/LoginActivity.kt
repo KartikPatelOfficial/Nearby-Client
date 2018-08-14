@@ -47,8 +47,9 @@ class LoginActivity : AppCompatActivity(), Listener {
             data["Name"] = userName
             data["Number"] = phoneNumber
             data["Email"] = email
+            data["Title"] = title
 
-            db.collection("Vendors").document().set(data).addOnCompleteListener {
+            db.collection("Vendors").document(FirebaseAuth.getInstance().currentUser!!.uid).set(data).addOnCompleteListener {
                 startActivity(context, Intent(context, MainActivity::class.java), null)
                 activity!!.finish()
             }
