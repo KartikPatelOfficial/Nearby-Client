@@ -33,24 +33,22 @@ class LoginActivity : AppCompatActivity(), Listener {
     }
 
     private val signIn = 69
+    private var isLocationPermissionEnabled = false
 
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loadActivity()
+    }
+
+    private fun loadActivity() {
         mAuth = FirebaseAuth.getInstance()
         if (mAuth.currentUser != null) {
             startMainActivity()
         }
         setContentView(R.layout.activity_login)
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
-        } else {
-            easyWayLocation = EasyWayLocation(this)
-            easyWayLocation!!.setListener(this)
-        }
 
         val ft = supportFragmentManager!!.beginTransaction()
         ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
@@ -62,13 +60,36 @@ class LoginActivity : AppCompatActivity(), Listener {
                 .requestEmail()
                 .build()
 
-
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         findViewById<SignInButton>(R.id.loginGoogleSignIn).setOnClickListener {
             signIn()
         }
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            return
+        } else {
+            isLocationPermissionEnabled = true
+            easyWayLocation = EasyWayLocation(this)
+            easyWayLocation!!.setListener(this)
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            1 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(applicationContext, "Permission granted", Toast.LENGTH_SHORT).show()
+                    loadActivity()
+                } else {
+                    finish()
+                }
+                return
+            }
+        }
     }
 
     private fun signIn() {
@@ -95,7 +116,7 @@ class LoginActivity : AppCompatActivity(), Listener {
         }
     }
 
-    fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         mAuth.signInWithCredential(credential)
@@ -130,8 +151,10 @@ class LoginActivity : AppCompatActivity(), Listener {
     }
 
     override fun onPause() {
-        easyWayLocation!!.endUpdates()
         super.onPause()
+        if (isLocationPermissionEnabled) {
+            easyWayLocation!!.endUpdates()
+        }
     }
 }
 
