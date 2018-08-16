@@ -1,6 +1,8 @@
 package com.serviquik.nearby.auth
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,7 +12,9 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.startActivity
-import android.widget.Toast
+import android.support.v7.app.AlertDialog
+import android.text.TextUtils
+import android.widget.*
 import com.example.easywaylocation.Listener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -32,11 +36,13 @@ class LoginActivity : AppCompatActivity(), Listener {
 
     private var easyWayLocation: EasyWayLocation? = null
 
+    private var isFirstTime:Boolean = true
+
     companion object {
         var lat: Double? = null
         var long: Double? = null
 
-        fun addDataToDatabase(userName: String, email: String, lat: Double?, lon: Double?, addLine1: String, addLine2: String, category: String, phoneNumber: String, context: Context, activity: FragmentActivity?,title:String) {
+        fun addDataToDatabase(userName: String, email: String, lat: Double?, lon: Double?, addLine1: String, addLine2: String, category: String, phoneNumber: String, context: Context, activity: FragmentActivity, title: String) {
             val db = FirebaseFirestore.getInstance()
 
             val data = HashMap<String, Any?>()
@@ -51,7 +57,8 @@ class LoginActivity : AppCompatActivity(), Listener {
 
             db.collection("Vendors").document(FirebaseAuth.getInstance().currentUser!!.uid).set(data).addOnCompleteListener {
                 startActivity(context, Intent(context, MainActivity::class.java), null)
-                activity!!.finish()
+                activity.finish()
+
             }
         }
     }
@@ -75,7 +82,10 @@ class LoginActivity : AppCompatActivity(), Listener {
         setContentView(R.layout.activity_login)
 
         val ft = supportFragmentManager!!.beginTransaction()
-        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
+        if (isFirstTime) {
+            ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
+            isFirstTime=false
+        }
         ft.replace(R.id.LoginFramLayout, SignInFragment(), "RootFragment")
         ft.commit()
 
@@ -140,16 +150,73 @@ class LoginActivity : AppCompatActivity(), Listener {
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
+
+        val arrayList = ArrayList<String>()
+
+        FirebaseFirestore.getInstance().collection("Categories").get().addOnCompleteListener {
+            for (document in it.result) {
+                arrayList.add(document.id)
+            }
+        }
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        //Todo: Add data to database
-                        startMainActivity()
+
+                        val metrics = resources.displayMetrics
+                        val width = metrics.widthPixels
+
+                        val dialog = Dialog(this)
+                        dialog.setContentView(R.layout.fragment_sign_up_details)
+                        dialog.window.setLayout((6 * width) / 7, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        dialog.setTitle("One More Step")
+
+                        val numberEt = dialog.findViewById<EditText>(R.id.signUpDetailPhone)
+                        val addLine1ET = dialog.findViewById<EditText>(R.id.signUpDetailsAddline1)
+                        val addLine2ET = dialog.findViewById<EditText>(R.id.signUpDetailsAddline2)
+                        val titleET = dialog.findViewById<EditText>(R.id.signUpDetailsTitle)
+                        val spinner = dialog.findViewById<Spinner>(R.id.signUpDetailSpinner)
+
+                        val adapter = ArrayAdapter<String>(this@LoginActivity, android.R.layout.simple_spinner_dropdown_item, arrayList)
+                        spinner.adapter = adapter
+
+                        dialog.findViewById<Button>(R.id.loginSignUpBtn).setOnClickListener {
+
+                            val number = numberEt.text.toString()
+                            val addLine1 = addLine1ET.text.toString()
+                            val addLine2 = addLine2ET.text.toString()
+                            val title = titleET.text.toString()
+
+                            if (TextUtils.isEmpty(number)) {
+                                numberEt.error = "Please enter phone number"
+                                return@setOnClickListener
+                            }
+
+                            if (TextUtils.isEmpty(addLine1)) {
+                                addLine1ET.error = "Please enter address"
+                                return@setOnClickListener
+                            }
+
+                            if (TextUtils.isEmpty(addLine2)) {
+                                addLine2ET.error = "Please enter address"
+                                return@setOnClickListener
+                            }
+
+                            if (TextUtils.isEmpty(title)) {
+                                titleET.error = "Please enter title"
+                                return@setOnClickListener
+                            }
+
+                            addDataToDatabase(mAuth.currentUser!!.displayName!!, mAuth.currentUser!!.email!!, lat, long, addLine1, addLine2, spinner.selectedItem.toString(), number, this, this, title)
+                        }
+
+                        dialog.show()
+
                     } else {
-                        Toast.makeText(this, task.exception!!.localizedMessage, Toast.LENGTH_LONG).show()
+                        AlertDialog.Builder(this).setTitle("Error").setMessage(task.exception!!.localizedMessage).show()
                     }
                 }
     }
@@ -167,12 +234,9 @@ class LoginActivity : AppCompatActivity(), Listener {
         easyWayLocation!!.beginUpdates()
         lat = easyWayLocation!!.latitude
         long = easyWayLocation!!.longitude
-        Toast.makeText(this, "Location ON", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onPositionChanged() {
-        Toast.makeText(this, "" + easyWayLocation!!.longitude + "," + easyWayLocation!!.latitude, Toast.LENGTH_SHORT).show()
-    }
+    override fun onPositionChanged() {}
 
     override fun onPause() {
         super.onPause()
@@ -181,4 +245,3 @@ class LoginActivity : AppCompatActivity(), Listener {
         }
     }
 }
-

@@ -38,5 +38,7 @@
     <string name="title">Title</string>
     <string name="profile">Profile</string>
     <string name="logout">Logout</string>
+    <string name="verify">Verify</string>
+    <string name="send_otp">Send OTP</string>
 
 </resources>

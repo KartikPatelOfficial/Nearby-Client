@@ -54,7 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="38dp"
@@ -69,39 +70,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="kartikpatel1910@gmail.com"
+                android:text="@string/email"
                 android:textSize="16sp"
                 android:visibility="visible"
                 tools:ignore="HardcodedText" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profileEmailTIL"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:layout_weight="0"
-                android:visibility="invisible">
-
-                <EditText
-                    android:id="@+id/profileEmailET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/email"
-                    android:inputType="textEmailAddress" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <ImageButton
-                android:id="@+id/profileEmailEdit"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:layout_marginEnd="8dp"
-                android:background="#00FFFFFF"
-                android:src="@drawable/ic_edit_black_24dp"
-                tools:ignore="ContentDescription" />
 
         </LinearLayout>
 
@@ -127,28 +102,10 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="9664769226"
+                android:text="@string/phone"
                 android:textSize="16sp"
                 android:visibility="visible"
                 tools:ignore="HardcodedText" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profilePhoneTIL"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:layout_weight="0"
-                android:visibility="visible">
-
-                <EditText
-                    android:id="@+id/profilePhoneET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/phone"
-                    android:inputType="phone" />
-
-            </android.support.design.widget.TextInputLayout>
 
             <ImageButton
                 android:id="@+id/profilePhoneEdit"
@@ -183,28 +140,10 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="B7 bhadralok bunglows"
+                android:text="@string/address_line_1"
                 android:textSize="16sp"
                 android:visibility="visible"
                 tools:ignore="HardcodedText" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profileAdd1TIL"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:layout_weight="0"
-                android:visibility="invisible">
-
-                <EditText
-                    android:id="@+id/profileAdd1ET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/address_line_1"
-                    android:inputType="textPostalAddress" />
-
-            </android.support.design.widget.TextInputLayout>
 
             <ImageButton
                 android:id="@+id/profileAdd1Edit"
@@ -239,28 +178,10 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="Borbhatha road ankleshwar"
+                android:text="@string/address_line_2"
                 android:textSize="16sp"
                 android:visibility="visible"
                 tools:ignore="HardcodedText" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profileAddline2TIL"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:layout_weight="0"
-                android:visibility="invisible">
-
-                <EditText
-                    android:id="@+id/profileAddline2ET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/address_line_2"
-                    android:inputType="textPostalAddress" />
-
-            </android.support.design.widget.TextInputLayout>
 
             <ImageButton
                 android:id="@+id/profileAddline2Edit"
@@ -274,6 +195,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginBottom="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -295,28 +217,10 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="Suruchi Hotel"
+                android:text="@string/title"
                 android:textSize="16sp"
                 android:visibility="visible"
                 tools:ignore="HardcodedText" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/profileTitleTIL"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:layout_weight="0"
-                android:visibility="invisible">
-
-                <EditText
-                    android:id="@+id/profileTitleET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/title"
-                    android:inputType="textPostalAddress" />
-
-            </android.support.design.widget.TextInputLayout>
 
             <ImageButton
                 android:id="@+id/profileTitleEdit"
@@ -336,7 +240,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Kartik Patel"
+        android:text="Name"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -346,6 +250,7 @@
         tools:ignore="HardcodedText" />
 
     <Button
+        android:id="@+id/profileLogoutBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"

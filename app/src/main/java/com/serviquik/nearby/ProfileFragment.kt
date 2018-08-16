@@ -1,24 +1,22 @@
 package com.serviquik.nearby
 
 
-import android.app.ActionBar
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.TextInputLayout
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
-import android.view.inputmethod.EditorInfo
-import android.widget.LinearLayout
+import android.text.InputType
+import android.widget.*
+import com.serviquik.nearby.auth.LoginActivity
+
 
 class ProfileFragment : Fragment() {
 
@@ -36,7 +34,7 @@ class ProfileFragment : Fragment() {
 
         val profilePictureTv: ImageView = view.findViewById(R.id.circleImageView)
 
-        db.collection("Vendors").document(auth.currentUser!!.uid).get().addOnCompleteListener {
+        db.collection("Vendors").document(auth.currentUser!!.uid).get().addOnCompleteListener { it ->
 
             val document = it.result
             val profilePicURL = document["ProfilePicture"]
@@ -50,6 +48,8 @@ class ProfileFragment : Fragment() {
                 }
             }
 
+            addLogoutListner(view)
+
             view.findViewById<TextView>(R.id.profileNameTV).text = document["Name"] as String
             add1Tv = view.findViewById(R.id.profileAdd1TV)
             add1Tv.text = document["Address1"] as String
@@ -62,69 +62,69 @@ class ProfileFragment : Fragment() {
             titleTV = view.findViewById(R.id.profileTitleTV)
             titleTV.text = document["Title"] as String
 
-
-
-            addEditClickListner(view)
+            addOnClickListner(view.findViewById(R.id.profileAdd1Edit), "Address1")
+            addOnClickListner(view.findViewById(R.id.profileAddline2Edit), "Address2")
+            addOnClickListner(view.findViewById(R.id.profilePhoneEdit), "Number")
+            addOnClickListner(view.findViewById(R.id.profileTitleEdit), "Title")
 
         }
 
         return view
     }
 
-    private fun addEditClickListner(view: View) {
-
-        val add1Et = view.findViewById<EditText>(R.id.profileAdd1ET)
-        val add2Et = view.findViewById<EditText>(R.id.profileAddline2ET)
-        val emailEt = view.findViewById<EditText>(R.id.profileEmailET)
-        val phoneEt = view.findViewById<EditText>(R.id.profilePhoneET)
-        val titleEt = view.findViewById<EditText>(R.id.profileTitleET)
-
-        view.findViewById<ImageButton>(R.id.profileAdd1Edit).setOnClickListener {
-            hideView(view.findViewById(R.id.profileAdd1TIL), add1Et)
-            addDonePressListner(add1Et, "Address1")
-        }
-        view.findViewById<ImageButton>(R.id.profileAddline2Edit).setOnClickListener {
-            hideView(view.findViewById(R.id.profileAddline2TIL), add2Et)
-            addDonePressListner(add2Et, "Address2")
-        }
-        view.findViewById<ImageButton>(R.id.profileEmailEdit).setOnClickListener {
-            hideView(view.findViewById(R.id.profileEmailTIL), emailEt)
-            addDonePressListner(emailEt, "Email")
-        }
-        view.findViewById<ImageButton>(R.id.profilePhoneEdit).setOnClickListener {
-            hideView(view.findViewById(R.id.profilePhoneTIL), phoneEt)
-            addDonePressListner(phoneEt, "Number")
-        }
-        view.findViewById<ImageButton>(R.id.profileTitleEdit).setOnClickListener {
-            hideView(view.findViewById(R.id.profileTitleTIL), titleEt)
-            addDonePressListner(titleEt, "Title")
+    private fun addLogoutListner(view: View) {
+        view.findViewById<Button>(R.id.profileLogoutBtn).setOnClickListener {
+            auth.signOut()
+            startActivity(Intent(activity!!, LoginActivity::class.java))
+            activity!!.finish()
         }
     }
 
-    private fun addDonePressListner(editText: EditText, key: String) {
-        editText.setOnEditorActionListener { p0, p1, p2 ->
-            if (p1 == EditorInfo.IME_ACTION_DONE) {
-                val data = HashMap<String, Any>()
-                data[key] = editText.text.toString()
+    @SuppressLint("InflateParams")
+    private fun addOnClickListner(imageButton: ImageButton, key: String) {
 
-                db.collection("Vendors").document(auth.currentUser!!.uid).update(data).addOnFailureListener {
-                    AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.localizedMessage).show()
+        imageButton.setOnClickListener {
+            val dialogBuilder = AlertDialog.Builder(context!!)
+            val inflater = this.layoutInflater
+            val dialogView = inflater.inflate(R.layout.custom_dialog, null)
+            dialogBuilder.setView(dialogView)
+
+            val edt = dialogView.findViewById<View>(R.id.edit1) as EditText
+
+            when (key) {
+                "Number" -> {
+                    edt.inputType = InputType.TYPE_CLASS_NUMBER
+                    edt.hint = "Phone Number"
                 }
+
+                "Address1" -> edt.hint = "Address Line 1"
+                "Address2" -> edt.hint = "Address Line 2"
+                "Title" -> edt.hint = "Title"
             }
-            false
+
+            dialogBuilder.setTitle("Edit")
+            dialogBuilder.setMessage("Enter text below")
+            dialogBuilder.setPositiveButton("Done") { _, _ ->
+                addDatatoDatabse(edt.text.toString(), key)
+            }
+            dialogBuilder.setNegativeButton("Cancel") { _, _ ->
+                //pass
+            }
+            val b = dialogBuilder.create()
+            b.show()
+        }
+
+    }
+
+
+    private fun addDatatoDatabse(string: String, key: String) {
+        val data = HashMap<String, Any>()
+        data[key] = string
+
+        db.collection("Vendors").document(auth.currentUser!!.uid).update(data).addOnFailureListener {
+            AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.localizedMessage).show()
         }
     }
-
-    private fun hideView(textView: TextInputLayout, editText: EditText) {
-        textView.visibility = View.INVISIBLE
-        editText.visibility = View.VISIBLE
-
-        val textViewParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0f)
-        val editTextParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT, 1f)
-
-        textView.layoutParams = textViewParams
-        editText.layoutParams = editTextParams
-
-    }
-
 }
+
+

@@ -30,14 +30,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val titles = ArrayList<String>()
 
     private lateinit var profilePictureTv: ImageView
-    private lateinit var tip:TourGuide
+    private lateinit var tip: TourGuide
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
+    @Suppress("PrivatePropertyName")
     private val PREFS_NAME = "MyPrefsFile"
 
-    private var settings:SharedPreferences? = null
+    private var settings: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +86,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     tip.cleanUp()
 
-                    settings!!.edit().putBoolean("my_first_time", false).apply();
+                    settings!!.edit().putBoolean("my_first_time", false).apply()
                 }
 
             }
@@ -109,6 +110,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         profilePictureTv.setOnClickListener {
             changeFragment(ProfileFragment())
+            drawer_layout.closeDrawers()
         }
 
         db.collection("Vendors").document(auth.currentUser!!.uid).get().addOnCompleteListener {
@@ -150,20 +152,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.drawerOrderList -> {
                 toolbar.title = titles[0]
+                drawer_layout.closeDrawers()
             }
             R.id.drawerManageCustomer -> {
                 toolbar.title = titles[1]
                 changeFragment(ManageCustomerFragment())
+                drawer_layout.closeDrawers()
             }
             R.id.drawerManageProduct -> {
                 toolbar.title = titles[2]
                 changeFragment(ManageProductsFragment())
+                drawer_layout.closeDrawers()
             }
             R.id.drawerReviews -> {
                 toolbar.title = titles[3]
+                drawer_layout.closeDrawers()
             }
             R.id.drawerOffer -> {
                 toolbar.title = titles[4]
+                drawer_layout.closeDrawers()
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)

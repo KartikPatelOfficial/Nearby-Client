@@ -27,74 +27,22 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/signInEmail"
+                android:padding="16dp"
+                android:id="@+id/signInPhoneET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/signInPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:inputType="textPassword" />
+                android:hint="@string/phone"
+                android:inputType="phone" />
 
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/loginSignInBtn"
+            android:id="@+id/loginVerifyBtn"
             style="@style/Base.Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="@string/sign_in" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/new_user" />
-
-            <Button
-                android:id="@+id/signInSignUpBtn"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="@string/sign_up"
-                android:textColor="@color/design_default_color_primary" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/forgot" />
-
-            <Button
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lines="1"
-                android:text="@string/recover"
-                android:textColor="@color/design_default_color_primary" />
-
-        </LinearLayout>
+            android:text="@string/send_otp" />
 
     </LinearLayout>
 
