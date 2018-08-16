@@ -39,5 +39,8 @@
     <string name="send_otp">Send OTP</string>
     <string name="organization">Organization</string>
     <string name="last_step">Last Step</string>
+    <string name="product_name">Product Name</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
 
 </resources>

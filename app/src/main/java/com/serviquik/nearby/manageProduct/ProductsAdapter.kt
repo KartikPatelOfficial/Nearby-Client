@@ -31,8 +31,16 @@ class ProductsAdapter(private val products: ArrayList<Product>) : RecyclerView.A
         holder.descriptionTV.text = product.description
         holder.titleTV.text = product.title
         holder.priceTV.text = "₹ "+product.price
-        Picasso.get().load(Uri.parse(product.images[0])).into(holder.imageView)
-        holder.ratingBar.rating = product.rating.toFloat()
+        try {
+            Picasso.get().load(Uri.parse(product.images!![0])).into(holder.imageView)
+        }catch (e : NullPointerException){
+
+        }
+        if(product.rating!=null) {
+            holder.ratingBar.rating = product.rating.toFloat()
+        }else{
+            holder.ratingBar.rating = 2.5f
+        }
 
         holder.editBtn.setOnClickListener {
            Log.d("----->",product.parentID)

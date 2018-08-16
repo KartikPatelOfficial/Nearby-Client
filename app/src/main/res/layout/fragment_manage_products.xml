@@ -7,6 +7,7 @@
     tools:context=".manageProduct.ManageProductsFragment">
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/manageProductFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:tint="@color/white"

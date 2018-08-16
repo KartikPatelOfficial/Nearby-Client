@@ -107,7 +107,6 @@ class SignInFragment : Fragment() {
 
     private fun requestToFill() {
 
-
         val metrics = resources.displayMetrics
         val width = metrics.widthPixels
 
