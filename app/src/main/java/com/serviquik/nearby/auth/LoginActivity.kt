@@ -3,16 +3,17 @@ package com.serviquik.nearby.auth
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AlertDialog
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.widget.*
 import com.example.easywaylocation.Listener
@@ -30,37 +31,19 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.serviquik.nearby.MainActivity
 import com.serviquik.nearby.R
+import java.util.*
 
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class LoginActivity : AppCompatActivity(), Listener {
 
     private var easyWayLocation: EasyWayLocation? = null
 
-    private var isFirstTime:Boolean = true
+    private var isFirstTime: Boolean = true
 
     companion object {
         var lat: Double? = null
         var long: Double? = null
-
-        fun addDataToDatabase(userName: String, email: String, lat: Double?, lon: Double?, addLine1: String, addLine2: String, category: String, phoneNumber: String, context: Context, activity: FragmentActivity, title: String) {
-            val db = FirebaseFirestore.getInstance()
-
-            val data = HashMap<String, Any?>()
-            data["Address1"] = addLine1
-            data["Address2"] = addLine2
-            data["Category"] = category
-            data["Location"] = GeoPoint(lat!!, lon!!)
-            data["Name"] = userName
-            data["Number"] = phoneNumber
-            data["Email"] = email
-            data["Title"] = title
-
-            db.collection("Vendors").document(FirebaseAuth.getInstance().currentUser!!.uid).set(data).addOnCompleteListener {
-                startActivity(context, Intent(context, MainActivity::class.java), null)
-                activity.finish()
-
-            }
-        }
     }
 
     private val signIn = 69
@@ -84,7 +67,7 @@ class LoginActivity : AppCompatActivity(), Listener {
         val ft = supportFragmentManager!!.beginTransaction()
         if (isFirstTime) {
             ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
-            isFirstTime=false
+            isFirstTime = false
         }
         ft.replace(R.id.LoginFramLayout, SignInFragment(), "RootFragment")
         ft.commit()
@@ -153,6 +136,32 @@ class LoginActivity : AppCompatActivity(), Listener {
     @SuppressLint("InflateParams")
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
 
+        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this) { task ->
+
+                    if (task.isSuccessful) {
+
+                        val uid = mAuth.currentUser!!.uid
+
+                        FirebaseFirestore.getInstance().collection("Vendors").document(uid).get().addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                Toast.makeText(this, "Welcome ${it.result.getString("Name")}", Toast.LENGTH_LONG).show()
+                                startMainActivity()
+                            } else {
+                                requestToFill()
+                            }
+                        }
+
+                    } else {
+                        AlertDialog.Builder(this).setTitle("Error").setMessage(task.exception!!.localizedMessage).show()
+                    }
+                }
+    }
+
+    private fun requestToFill() {
+
         val arrayList = ArrayList<String>()
 
         FirebaseFirestore.getInstance().collection("Categories").get().addOnCompleteListener {
@@ -161,64 +170,74 @@ class LoginActivity : AppCompatActivity(), Listener {
             }
         }
 
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
+        val metrics = resources.displayMetrics
+        val width = metrics.widthPixels
 
-                        val metrics = resources.displayMetrics
-                        val width = metrics.widthPixels
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.fragment_sign_up_details)
+        dialog.window.setLayout((6 * width) / 7, LinearLayout.LayoutParams.WRAP_CONTENT)
+        dialog.setTitle("One More Step")
 
-                        val dialog = Dialog(this)
-                        dialog.setContentView(R.layout.fragment_sign_up_details)
-                        dialog.window.setLayout((6 * width) / 7, LinearLayout.LayoutParams.WRAP_CONTENT)
-                        dialog.setTitle("One More Step")
+        val numberEt = dialog.findViewById<EditText>(R.id.signUpDetailPhone)
+        val addLine1ET = dialog.findViewById<EditText>(R.id.signUpDetailsAddline1)
+        val titleET = dialog.findViewById<EditText>(R.id.signUpDetailsTitle)
+        val spinner = dialog.findViewById<Spinner>(R.id.signUpDetailSpinner)
 
-                        val numberEt = dialog.findViewById<EditText>(R.id.signUpDetailPhone)
-                        val addLine1ET = dialog.findViewById<EditText>(R.id.signUpDetailsAddline1)
-                        val addLine2ET = dialog.findViewById<EditText>(R.id.signUpDetailsAddline2)
-                        val titleET = dialog.findViewById<EditText>(R.id.signUpDetailsTitle)
-                        val spinner = dialog.findViewById<Spinner>(R.id.signUpDetailSpinner)
+        val adapter = ArrayAdapter<String>(this@LoginActivity, android.R.layout.simple_spinner_dropdown_item, arrayList)
+        spinner.adapter = adapter
 
-                        val adapter = ArrayAdapter<String>(this@LoginActivity, android.R.layout.simple_spinner_dropdown_item, arrayList)
-                        spinner.adapter = adapter
+        val address = getAddressFromLatLon(LoginActivity.lat, LoginActivity.long)
 
-                        dialog.findViewById<Button>(R.id.loginSignUpBtn).setOnClickListener {
+        if (address != null) {
+            addLine1ET.text = SpannableStringBuilder(address)
+        }
 
-                            val number = numberEt.text.toString()
-                            val addLine1 = addLine1ET.text.toString()
-                            val addLine2 = addLine2ET.text.toString()
-                            val title = titleET.text.toString()
+        dialog.findViewById<Button>(R.id.loginSignUpBtn).setOnClickListener { _ ->
 
-                            if (TextUtils.isEmpty(number)) {
-                                numberEt.error = "Please enter phone number"
-                                return@setOnClickListener
-                            }
+            val number = numberEt.text.toString()
+            val addLine1 = addLine1ET.text.toString()
+            val title = titleET.text.toString()
 
-                            if (TextUtils.isEmpty(addLine1)) {
-                                addLine1ET.error = "Please enter address"
-                                return@setOnClickListener
-                            }
+            if (TextUtils.isEmpty(number)) {
+                numberEt.error = "Please enter phone number"
+                return@setOnClickListener
+            }
 
-                            if (TextUtils.isEmpty(addLine2)) {
-                                addLine2ET.error = "Please enter address"
-                                return@setOnClickListener
-                            }
+            if (TextUtils.isEmpty(addLine1)) {
+                addLine1ET.error = "Please enter address"
+                return@setOnClickListener
+            }
 
-                            if (TextUtils.isEmpty(title)) {
-                                titleET.error = "Please enter title"
-                                return@setOnClickListener
-                            }
+            if (TextUtils.isEmpty(title)) {
+                titleET.error = "Please enter title"
+                return@setOnClickListener
+            }
 
-                            addDataToDatabase(mAuth.currentUser!!.displayName!!, mAuth.currentUser!!.email!!, lat, long, addLine1, addLine2, spinner.selectedItem.toString(), number, this, this, title)
-                        }
+            val db = FirebaseFirestore.getInstance()
 
-                        dialog.show()
+            val data = HashMap<String, Any?>()
+            data["Address"] = addLine1
+            data["Category"] = spinner.selectedItem.toString()
+            data["Location"] = GeoPoint(lat!!, long!!)
+            data["Name"] = mAuth.currentUser!!.displayName
+            data["Number"] = number
+            data["Email"] = mAuth.currentUser!!.email
+            data["Title"] = title
 
-                    } else {
-                        AlertDialog.Builder(this).setTitle("Error").setMessage(task.exception!!.localizedMessage).show()
-                    }
-                }
+            db.collection("Vendors").document(FirebaseAuth.getInstance().currentUser!!.uid).set(data).addOnCompleteListener {
+                startActivity(this, Intent(this, MainActivity::class.java), null)
+                finish()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun getAddressFromLatLon(lat: Double?, long: Double?): String? {
+        val geocoder = Geocoder(this, Locale.getDefault())
+        val addresses: List<Address>
+        addresses = geocoder.getFromLocation(lat!!, long!!, 1)
+        return addresses[0].getAddressLine(0)
     }
 
     private fun startMainActivity() {

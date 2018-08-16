@@ -27,12 +27,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="edit">Edit</string>
     <string name="phone">Phone</string>
-    <string name="address_line_1">Address Line 1</string>
-    <string name="address_line_2">Address Line 2</string>
+    <string name="address_line">Address</string>
     <string name="next">Next</string>
     <string name="category">Category</string>
     <string name="title">Title</string>
@@ -40,5 +37,7 @@
     <string name="logout">Logout</string>
     <string name="verify">Verify</string>
     <string name="send_otp">Send OTP</string>
+    <string name="organization">Organization</string>
+    <string name="last_step">Last Step</string>
 
 </resources>

@@ -24,7 +24,6 @@ class ProfileFragment : Fragment() {
     val auth = FirebaseAuth.getInstance()!!
 
     private lateinit var add1Tv: TextView
-    private lateinit var add2Tv: TextView
     private lateinit var emailTv: TextView
     private lateinit var phoneTv: TextView
     private lateinit var titleTV: TextView
@@ -53,8 +52,6 @@ class ProfileFragment : Fragment() {
             view.findViewById<TextView>(R.id.profileNameTV).text = document["Name"] as String
             add1Tv = view.findViewById(R.id.profileAdd1TV)
             add1Tv.text = document["Address1"] as String
-            add2Tv = view.findViewById(R.id.profileAddline2TV)
-            add2Tv.text = document["Address2"] as String
             emailTv = view.findViewById(R.id.profileEmailTV)
             emailTv.text = document["Email"] as String
             phoneTv = view.findViewById(R.id.profilePhoneTV)
@@ -63,7 +60,6 @@ class ProfileFragment : Fragment() {
             titleTV.text = document["Title"] as String
 
             addOnClickListner(view.findViewById(R.id.profileAdd1Edit), "Address1")
-            addOnClickListner(view.findViewById(R.id.profileAddline2Edit), "Address2")
             addOnClickListner(view.findViewById(R.id.profilePhoneEdit), "Number")
             addOnClickListner(view.findViewById(R.id.profileTitleEdit), "Title")
 
