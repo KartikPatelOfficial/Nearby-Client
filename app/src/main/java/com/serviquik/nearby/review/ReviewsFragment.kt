@@ -6,14 +6,40 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.serviquik.nearby.R
+import com.serviquik.nearby.manageProduct.Product
 
 class ReviewsFragment : Fragment() {
+
+    private val db = FirebaseFirestore.getInstance()
+    private val reviews = ArrayList<Review>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_reviews, container, false)
 
+        val product = Product(
+                arguments!!["Description"] as String,
+                arguments!!["Title"] as String,
+                arguments!!.getLong("Price"),
+                arguments!!.getStringArrayList("Images"),
+                arguments!!["ParantID"] as String,
+                arguments!!["Rating"] as String,
+                arguments!!["ParentCategory"] as String,
+                Timestamp.now()
+        )
 
+        db.collection("Products").document(product.parentID).collection("Reviews").get().addOnCompleteListener {
+            if (it.isSuccessful) {
+                for (doc in it.result) {
+                    val review = Review(doc.getString("ID")!!, doc.getString("Name")!!, doc.getString("Review")!!, doc.getString("Star")!!)
+                    reviews.add(review)
+                }
+            } else {
+                //Todo show review not found error
+            }
+        }
 
         return view
     }

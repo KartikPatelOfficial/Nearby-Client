@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.serviquik.nearby.R
 import android.widget.AdapterView
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -22,9 +24,8 @@ class ManageProductsFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()!!
     private val products = ArrayList<Product>()
-    private val adapter = ProductsAdapter(products)
+    private val adapter = ProductsAdapter(products,fragmentManager!!)
 
-    private val arrayList = ArrayList<String>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_manage_products, container, false)
@@ -32,6 +33,7 @@ class ManageProductsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
+        val arrayList = ArrayList<String>()
 
         db.collection("Vendors").document(auth.uid!!).get().addOnCompleteListener { rootIt ->
             if (rootIt.isSuccessful) {
@@ -49,13 +51,13 @@ class ManageProductsFragment : Fragment() {
 
 
 
-        view.findViewById<FloatingActionButton>(R.id.manageProductFAB).setOnClickListener {
+        view.findViewById<FloatingActionButton>(R.id.manageProductFAB).setOnClickListener { _ ->
 
             val inflater1 = LayoutInflater.from(context!!)
             val dialog = inflater1.inflate(R.layout.product_add, null)
             val dialogeBuilder = AlertDialog.Builder(context!!)
             dialogeBuilder.setView(dialog)
-            dialogeBuilder.setTitle("settings")
+            dialogeBuilder.setTitle("Fill data")
 
             val nameEt = dialog.findViewById<EditText>(R.id.productAddName)
             val descriptionEt = dialog.findViewById<EditText>(R.id.productAddDescription)
@@ -69,9 +71,7 @@ class ManageProductsFragment : Fragment() {
 
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
 
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     category = arrayList[p2]
@@ -80,21 +80,29 @@ class ManageProductsFragment : Fragment() {
             }
             dialogeBuilder.setPositiveButton("OK") { _, _ ->
 
+                val description = descriptionEt.text.toString()
+                val name = nameEt.text.toString()
+                val price = Integer.parseInt(priceEt.text.toString())
+                val time = Timestamp.now()
+
                 val data = HashMap<String, Any?>()
-                data["Name"] = nameEt.text.toString()
-                data["Description"] = descriptionEt.text.toString()
-                data["Price"] = Integer.parseInt(priceEt.text.toString())
+                data["Name"] = name
+                data["Description"] = description
+                data["Price"] = price
                 data["ParentCategory"] = category
-                data["Time"] = System.currentTimeMillis() / 1000
+                data["Time"] = time
                 data["VendorID"] = auth.uid
 
-                db.collection("Products").document().set(data)
+                db.collection("Products").document().set(data).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        products.add(Product(description, name, price.toLong(), null, auth.uid!!, null, category!!, time))
+                        adapter.notifyDataSetChanged()
+                    }
+                }
 
             }
 
             dialogeBuilder.show()
-
-
         }
 
         db.collection("Products").whereEqualTo("VendorID", auth.currentUser!!.uid).get().addOnCompleteListener {
@@ -102,13 +110,23 @@ class ManageProductsFragment : Fragment() {
                 for (document in it.result) {
                     @Suppress("UNCHECKED_CAST")
 
+                    val imageList = ArrayList<String>()
+
+                    try {
+                        val imageList = document["Image"] as ArrayList<String>
+                    } catch (e: TypeCastException) {
+
+                    }
+
                     val product = Product(
                             document.getString("Description")!!,
                             document.getString("Name")!!,
                             document.getLong("Price")!!,
-                            document["Image"] as ArrayList<String>,
+                            imageList,
                             document.id,
-                            document.getString("rating")
+                            document.getString("rating"),
+                            document.getString("ParentCategory")!!,
+                            document.getTimestamp("Time")
                     )
                     products.add(product)
                     adapter.notifyDataSetChanged()
