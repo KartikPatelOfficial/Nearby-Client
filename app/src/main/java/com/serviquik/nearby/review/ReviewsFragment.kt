@@ -3,9 +3,12 @@ package com.serviquik.nearby.review
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.serviquik.nearby.R
@@ -19,13 +22,22 @@ class ReviewsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_reviews, container, false)
 
+        val notFoundTV: TextView = view.findViewById(R.id.manageReviewNotFoundTV)
+        notFoundTV.visibility = View.INVISIBLE
+
+        val adapter = ReviewAdapter(reviews)
+        val recyclerView: RecyclerView = view.findViewById(R.id.manageReviewRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context!!)
+        recyclerView.adapter = adapter
+
+
         val product = Product(
                 arguments!!["Description"] as String,
                 arguments!!["Title"] as String,
                 arguments!!.getLong("Price"),
                 arguments!!.getStringArrayList("Images"),
                 arguments!!["ParantID"] as String,
-                arguments!!["Rating"] as String,
+                arguments!!["Rating"] as String?,
                 arguments!!["ParentCategory"] as String,
                 Timestamp.now()
         )
@@ -36,11 +48,11 @@ class ReviewsFragment : Fragment() {
                     val review = Review(doc.getString("ID")!!, doc.getString("Name")!!, doc.getString("Review")!!, doc.getString("Star")!!)
                     reviews.add(review)
                 }
+                adapter.notifyDataSetChanged()
             } else {
-                //Todo show review not found error
+                notFoundTV.visibility = View.VISIBLE
             }
         }
-
         return view
     }
 

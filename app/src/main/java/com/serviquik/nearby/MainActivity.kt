@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import tourguide.tourguide.TourGuide
 import android.content.SharedPreferences
+import com.serviquik.nearby.customer.ManageCustomerFragment
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -162,10 +163,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.drawerManageProduct -> {
                 toolbar.title = titles[2]
                 changeFragment(ManageProductsFragment())
-                drawer_layout.closeDrawers()
-            }
-            R.id.drawerReviews -> {
-                toolbar.title = titles[3]
                 drawer_layout.closeDrawers()
             }
             R.id.drawerOffer -> {

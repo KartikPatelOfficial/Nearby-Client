@@ -19,11 +19,6 @@
         android:title="@string/manage_Product" />
 
     <item
-        android:id="@+id/drawerReviews"
-        android:icon="@drawable/ic_rate_review_black_24dp"
-        android:title="@string/review" />
-
-    <item
         android:id="@+id/drawerOffer"
         android:icon="@drawable/ic_local_offer_black_24dp"
         android:title="@string/offer" />

@@ -15,7 +15,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.serviquik.nearby.R
 import android.widget.AdapterView
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
 
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -24,12 +23,12 @@ class ManageProductsFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()!!
     private val products = ArrayList<Product>()
-    private val adapter = ProductsAdapter(products,fragmentManager!!)
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_manage_products, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.productsRecyclerView)
+        val adapter = ProductsAdapter(products,fragmentManager!!)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
@@ -51,7 +50,7 @@ class ManageProductsFragment : Fragment() {
 
 
 
-        view.findViewById<FloatingActionButton>(R.id.manageProductFAB).setOnClickListener { _ ->
+        view.findViewById<View>(R.id.manageProductFAB).setOnClickListener { _ ->
 
             val inflater1 = LayoutInflater.from(context!!)
             val dialog = inflater1.inflate(R.layout.product_add, null)

@@ -42,5 +42,6 @@
     <string name="product_name">Product Name</string>
     <string name="description">Description</string>
     <string name="price">Price</string>
+    <string name="_404_reviewa_not_found">404 reviewa not found</string>
 
 </resources>

@@ -74,7 +74,8 @@ class ProductsAdapter(private val products: ArrayList<Product>, val fragmentMana
             val ft = fragmentManager.beginTransaction()
             val fragment = ReviewsFragment()
             fragment.arguments = bundle
-            ft.replace(R.id.container, fragment)
+            ft.replace(R.id.container, fragment,"ReviewFragment")
+            ft.addToBackStack("ProductFragment")
             ft.commit()
         }
 
