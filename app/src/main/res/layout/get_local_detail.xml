@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:layout_margin="16dp"
+    android:padding="16dp"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <EditText
-        android:inputType="phone"
-        android:id="@+id/getLocalPhoneEt"
-        android:hint="@string/phone"
+        android:inputType="textPersonName"
+        android:id="@+id/getLocalNameEt"
+        android:hint="@string/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
