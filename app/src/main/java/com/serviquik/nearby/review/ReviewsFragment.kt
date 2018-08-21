@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.serviquik.nearby.MainActivity
 import com.serviquik.nearby.R
+import com.serviquik.nearby.auth.LoginActivity
 import com.serviquik.nearby.manageProduct.Product
 
 class ReviewsFragment : Fragment() {
@@ -21,6 +23,7 @@ class ReviewsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_reviews, container, false)
+        MainActivity.changeToolbarTitle("Reviews")
 
         val notFoundTV: TextView = view.findViewById(R.id.manageReviewNotFoundTV)
         notFoundTV.visibility = View.INVISIBLE
@@ -29,7 +32,6 @@ class ReviewsFragment : Fragment() {
         val recyclerView: RecyclerView = view.findViewById(R.id.manageReviewRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context!!)
         recyclerView.adapter = adapter
-
 
         val product = Product(
                 arguments!!["Description"] as String,

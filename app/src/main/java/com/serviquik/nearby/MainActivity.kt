@@ -1,5 +1,6 @@
 package com.serviquik.nearby
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import tourguide.tourguide.TourGuide
 import android.content.SharedPreferences
+import android.support.v7.widget.Toolbar
 import com.serviquik.nearby.customer.ManageCustomerFragment
 
 
@@ -41,10 +43,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private var settings: SharedPreferences? = null
 
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        var toolbarStatic: Toolbar? = null
+
+        fun changeToolbarTitle(title: String) {
+            toolbarStatic!!.title = title
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        toolbarStatic = toolbar
 
         settings = getSharedPreferences(PREFS_NAME, 0)
 

@@ -44,4 +44,7 @@
     <string name="price">Price</string>
     <string name="_404_reviewa_not_found">404 reviewa not found</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

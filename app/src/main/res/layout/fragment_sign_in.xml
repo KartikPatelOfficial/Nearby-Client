@@ -8,6 +8,7 @@
     tools:context=".auth.SignInFragment">
 
     <TextView
+        android:id="@+id/signInTitleTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
