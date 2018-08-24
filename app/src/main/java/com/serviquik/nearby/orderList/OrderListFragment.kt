@@ -19,10 +19,11 @@ class OrderListFragment : Fragment() {
     private val auth = FirebaseAuth.getInstance()
 
     private val orders = ArrayList<Order>()
-    private val adapter = OrderAdapter(orders)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_order_list, container, false)
+
+        val adapter = OrderAdapter(orders,context!!)
 
         val recyclerView: RecyclerView = view.findViewById(R.id.orderRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context!!)
@@ -48,7 +49,7 @@ class OrderListFragment : Fragment() {
                             }
                             orders[i].items = items
                             adapter.notifyDataSetChanged()
-                            recyclerView.adapter = OrderAdapter(orders)
+                            recyclerView.adapter = OrderAdapter(orders,activity!!)
                         } else {
                             AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
                         }

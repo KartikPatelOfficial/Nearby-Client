@@ -113,9 +113,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        toolbar.title = titles[0]
         changeFragment(OrderListFragment())
-        drawer_layout.closeDrawers()
 
     }
 
