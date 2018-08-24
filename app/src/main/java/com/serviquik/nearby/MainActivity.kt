@@ -26,6 +26,7 @@ import tourguide.tourguide.TourGuide
 import android.content.SharedPreferences
 import android.support.v7.widget.Toolbar
 import com.serviquik.nearby.customer.ManageCustomerFragment
+import com.serviquik.nearby.orderList.OrderListFragment
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -111,6 +112,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        toolbar.title = titles[0]
+        changeFragment(OrderListFragment())
+        drawer_layout.closeDrawers()
+
     }
 
     private fun addDataInDrawer() {
@@ -166,6 +172,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.drawerOrderList -> {
                 toolbar.title = titles[0]
+                changeFragment(OrderListFragment())
                 drawer_layout.closeDrawers()
             }
             R.id.drawerManageCustomer -> {

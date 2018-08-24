@@ -19,18 +19,17 @@ import com.serviquik.nearby.manageProduct.Product
 import android.widget.Toast
 import android.content.Intent
 import android.os.Environment
-import android.util.Log
 import com.google.firebase.Timestamp
 import com.itextpdf.text.*
 import com.itextpdf.text.pdf.PdfWriter
 import java.io.FileOutputStream
 import java.util.*
 import kotlin.collections.HashMap
-import com.itextpdf.text.pdf.BaseFont
 import com.itextpdf.text.pdf.draw.LineSeparator
 import com.itextpdf.text.Paragraph
+import com.itextpdf.text.pdf.PdfPCell
+import com.itextpdf.text.pdf.PdfPTable
 import java.io.File
-import java.io.FileNotFoundException
 import java.text.SimpleDateFormat
 
 
@@ -155,11 +154,76 @@ class BillFragment : Fragment() {
 
         document.open()
 
-        document.add(Paragraph("Hey there"))
-        document.add(Paragraph("Base camp"))
+        val mColorAccent = BaseColor(0, 153, 204, 255)
+        val mHeadingFontSize = 20.0f
 
+        val mOrderDetailsTitleChunk = Chunk("Order Details")
+        val mOrderDetailsTitleParagraph = Paragraph(mOrderDetailsTitleChunk)
+        mOrderDetailsTitleParagraph.alignment = Element.ALIGN_CENTER
+        document.add(mOrderDetailsTitleParagraph)
+
+        val lineSeparator = LineSeparator()
+        lineSeparator.lineColor = BaseColor(0, 0, 0, 68)
+
+        val mOrderIdChunk = Chunk("Order No:")
+        val mOrderIdParagraph = Paragraph(mOrderIdChunk)
+        document.add(mOrderIdParagraph)
+
+        document.add(Paragraph(""))
+        document.add(Chunk(lineSeparator))
+        document.add(Paragraph(""))
+
+        val table = PdfPTable(4)
+        var isFirst = true
+
+        document.add(Paragraph(""))
+        document.add(Paragraph(""))
+
+        for (cell in currentProducts) {
+
+            if (isFirst) {
+                table.addCell(getCell("Name"))
+                table.addCell(getCell("Price/product"))
+                table.addCell(getCell("Quantity"))
+                table.addCell(getCell("Price"))
+                table.addCell(getCell(""))
+                table.addCell(getCell(""))
+                table.addCell(getCell(""))
+                table.addCell(getCell(""))
+                isFirst = false
+            }
+
+            table.addCell(getCell(cell.productName!!))
+            table.addCell(getCell(cell.productPrice.toString()))
+            table.addCell(getCell(cell.quantity.toString()))
+            table.addCell(getCell((cell.quantity!! * cell.productPrice!!).toString()))
+        }
+
+        document.add(Paragraph(""))
+        document.add(Chunk(lineSeparator))
+        document.add(Paragraph(""))
+
+        val totalChunk = Chunk(total.toString())
+        val totalParagraph = Paragraph(totalChunk)
+        totalParagraph.alignment = Element.ALIGN_RIGHT
+        document.add(totalParagraph)
+
+        document.add(Chunk(lineSeparator))
+        document.add(Paragraph(""))
+
+        val grandTotalChunk = Chunk((total  * .5).toString())
+        val grandTotalParagraph = Paragraph(grandTotalChunk)
+        grandTotalParagraph.alignment = Element.ALIGN_RIGHT
+        document.add(grandTotalParagraph)
+
+        document.add(table)
         document.close()
+    }
 
+    private fun getCell(string: String): PdfPCell {
+        val cell = PdfPCell(Phrase(string))
+        cell.border = Rectangle.NO_BORDER
+        return cell
     }
 
 }
