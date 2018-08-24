@@ -47,7 +47,7 @@ class ReviewsFragment : Fragment() {
         db.collection("Products").document(product.parentID).collection("Reviews").get().addOnCompleteListener {
             if (it.isSuccessful) {
                 for (doc in it.result) {
-                    val review = Review(doc.getString("ID")!!, doc.getString("Name")!!, doc.getString("Review")!!, doc.getString("Star")!!)
+                    val review = Review(doc.getString("ID")!!, doc.getString("Name")!!, doc.getString("Review")!!, doc.getString("Star")!!,doc.getTimestamp("Time")!!)
                     reviews.add(review)
                 }
                 adapter.notifyDataSetChanged()

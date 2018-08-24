@@ -49,7 +49,11 @@ class OrderListFragment : Fragment() {
                             }
                             orders[i].items = items
                             adapter.notifyDataSetChanged()
-                            recyclerView.adapter = OrderAdapter(orders,activity!!)
+                            try {
+                                recyclerView.adapter = OrderAdapter(orders,activity!!)
+                            }catch (e:KotlinNullPointerException){
+                                e.printStackTrace()
+                            }
                         } else {
                             AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
                         }

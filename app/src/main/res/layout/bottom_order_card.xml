@@ -82,4 +82,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp" />
 
+    <Button
+        android:elevation="4dp"
+        android:text="@string/download_invoice"
+        android:layout_margin="16dp"
+        android:background="@drawable/button_border"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

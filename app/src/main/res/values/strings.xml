@@ -51,5 +51,6 @@
     <string name="quantity">Quantity</string>
     <string name="send_bill">send bill</string>
     <string name="add">add</string>
+    <string name="download_invoice">Download Invoice</string>
 
 </resources>

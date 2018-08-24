@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_marginTop="16dp"
     android:orientation="horizontal">
 
     <TextView
@@ -18,7 +18,7 @@
         android:id="@+id/cardBottomOrderQuantity"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="end"
         android:text="1"
         tools:ignore="HardcodedText" />
 
@@ -26,7 +26,7 @@
         android:id="@+id/cardBottomOrderPrice"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="end"
         android:text="₹5000"
         tools:ignore="HardcodedText" />
 
