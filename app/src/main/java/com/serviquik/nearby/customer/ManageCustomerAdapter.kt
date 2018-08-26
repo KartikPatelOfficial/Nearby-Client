@@ -15,12 +15,15 @@ import android.widget.Toast
 import com.serviquik.nearby.R
 import de.hdodenhof.circleimageview.CircleImageView
 import android.net.Uri
+import android.os.Bundle
 import android.support.design.card.MaterialCardView
+import android.support.v4.app.FragmentManager
+import com.serviquik.nearby.orderList.OrderListFragment
 import com.squareup.picasso.Picasso
 import java.util.*
 
 
-class ManageCustomerAdapter(private val customers: ArrayList<Customer>, private val context: Context) : RecyclerView.Adapter<ManageCustomerViewHolder>() {
+class ManageCustomerAdapter(private val customers: ArrayList<Customer>, private val context: Context,private val fragmentManager: FragmentManager) : RecyclerView.Adapter<ManageCustomerViewHolder>() {
 
     private val colors = java.util.ArrayList<String>()
 
@@ -57,6 +60,21 @@ class ManageCustomerAdapter(private val customers: ArrayList<Customer>, private 
             }
             popupMenu.show()
         }
+
+        p0.backgroud.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putBoolean("isClient",true)
+            bundle.putString("CID",customer.cid)
+
+            val fragment = OrderListFragment()
+            fragment.arguments = bundle
+
+            val ft = fragmentManager.beginTransaction()
+            ft.replace(R.id.container, fragment,"OrderList")
+            ft.addToBackStack("ManageCustomer")
+            ft.commit()
+        }
+
         if (customer.profileURL != null) {
             Picasso.Builder(context).build().load(customer.profileURL).into(p0.profileIV)
         }

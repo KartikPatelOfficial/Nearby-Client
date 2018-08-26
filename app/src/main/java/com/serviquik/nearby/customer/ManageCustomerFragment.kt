@@ -26,7 +26,8 @@ class ManageCustomerFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
     private val customers = ArrayList<Customer>()
-    private lateinit var  adapter:ManageCustomerAdapter
+    private lateinit var adapter: ManageCustomerAdapter
+    private var customerSize = 0
 
     companion object {
         var name = ""
@@ -34,26 +35,28 @@ class ManageCustomerFragment : Fragment() {
         var email = ""
     }
 
-
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_manage_customer, container, false)
 
         val recyclerView: RecyclerView = view.findViewById(R.id.manageCustomerRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context!!)
-        adapter = ManageCustomerAdapter(customers,context!!)
+        adapter = ManageCustomerAdapter(customers, context!!, fragmentManager!!)
         recyclerView.adapter = adapter
 
         db.collection("Vendors").document(auth.uid!!).collection("LocalClients").get().addOnCompleteListener {
-            if (it.isSuccessful){
-                for (doc in it.result){
+            if (it.isSuccessful) {
+                customerSize = it.result.size()
+                for (doc in it.result) {
                     val isLocal = doc.getBoolean("isLocal")!!
-                    var profileURL:String? = null
-                    if (!isLocal){
+                    var profileURL: String? = null
+                    if (!isLocal) {
                         profileURL = doc.getString("ProfileURL")
                     }
-                    val customer = Customer(doc.getString("Name")!!,doc.getString("Email")!!,doc.getString("Number")!!,doc.id,isLocal,profileURL)
-                    customers.add(customer)
+                    val customer = Customer(doc.getString("Name")!!, doc.getString("Email")!!, doc.getString("Number")!!, doc.id, isLocal, profileURL)
+                    if (customers.size < customerSize) {
+                        customers.add(customer)
+                    }
                 }
                 adapter.notifyDataSetChanged()
             }
