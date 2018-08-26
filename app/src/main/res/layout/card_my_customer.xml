@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_marginTop="8dp"
+    android:layout_height="wrap_content">
+
+    <android.support.design.card.MaterialCardView
+        android:id="@+id/cardCustomerBack"
+        android:elevation="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_gravity="center"
+                android:layout_width="68dp"
+                android:layout_height="68dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/white"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="1dp" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/cardCustomerImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_person_black_24dp"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="1dp" />
+
+            </FrameLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:textColor="@color/white"
+                    android:id="@+id/cardCustomerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kartik Patel"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:textColor="@color/white"
+                    android:id="@+id/cardCustomerType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Local"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:tint="@color/white"
+                android:id="@+id/cardCustomerMore"
+                android:layout_width="wrap_content"
+                android:layout_height="68dp"
+                android:layout_marginEnd="8dp"
+                android:background="#00FFFFFF"
+                android:contentDescription="@string/more"
+                android:src="@drawable/ic_more_vert_black_24dp" />
+
+        </LinearLayout>
+
+    </android.support.design.card.MaterialCardView>
+
+</android.support.constraint.ConstraintLayout>
