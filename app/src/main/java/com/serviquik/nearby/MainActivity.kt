@@ -1,5 +1,6 @@
 package com.serviquik.nearby
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.net.Uri
@@ -24,16 +25,20 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import tourguide.tourguide.TourGuide
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
+import android.support.annotation.RequiresApi
+import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.Toolbar
 import com.serviquik.nearby.customer.ManageCustomerFragment
 import com.serviquik.nearby.orderList.OrderListFragment
+import com.serviquik.nearby.profile.ProfileFragment
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val titles = ArrayList<String>()
 
-    private lateinit var profilePictureTv: ImageView
     private lateinit var tip: TourGuide
 
     private val db = FirebaseFirestore.getInstance()
@@ -48,12 +53,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         @SuppressLint("StaticFieldLeak")
         var toolbarStatic: Toolbar? = null
 
+        @SuppressLint("StaticFieldLeak")
+        lateinit var profilePictureTv: ImageView
+
         fun changeToolbarTitle(title: String) {
             toolbarStatic!!.title = title
         }
 
+        fun changeNavBarProfilePicture(path:String){
+            Picasso.get().load(path).into(profilePictureTv)
+        }
+
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -68,6 +81,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         window.statusBarColor = ContextCompat.getColor(this, R.color.white)
 
         addDataInDrawer()
+
+        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1);
+        }
 
         titles.add(getString(R.string.order_list))
         titles.add(getString(R.string.manage_customer))
