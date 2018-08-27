@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp">
+
+        <LinearLayout
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:id="@+id/cardOfferImageView"
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/cardOfferOffer"
+                android:layout_marginTop="8dp"
+                android:text="Offer title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+
+    </android.support.design.card.MaterialCardView>
+
+</FrameLayout>

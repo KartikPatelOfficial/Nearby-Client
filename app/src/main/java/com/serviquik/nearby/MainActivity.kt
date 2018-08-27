@@ -31,6 +31,7 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.Toolbar
 import com.serviquik.nearby.customer.ManageCustomerFragment
+import com.serviquik.nearby.offer.OfferFragment
 import com.serviquik.nearby.orderList.OrderListFragment
 import com.serviquik.nearby.profile.ProfileFragment
 
@@ -202,6 +203,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.drawerOffer -> {
                 toolbar.title = titles[4]
+                changeFragment(OfferFragment())
                 drawer_layout.closeDrawers()
             }
         }

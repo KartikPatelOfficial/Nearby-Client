@@ -53,5 +53,7 @@
     <string name="add">add</string>
     <string name="download_invoice">Download Invoice</string>
     <string name="more">More</string>
+    <string name="image">Image</string>
+    <string name="select_image">Select Image</string>
 
 </resources>

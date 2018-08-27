@@ -1,7 +1,9 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 package com.serviquik.nearby.manageProduct
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -17,7 +19,6 @@ import android.widget.AdapterView
 import com.google.firebase.Timestamp
 
 
-@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ManageProductsFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
@@ -25,6 +26,7 @@ class ManageProductsFragment : Fragment() {
     private val products = ArrayList<Product>()
 
 
+    @SuppressLint("InflateParams")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_manage_products, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.productsRecyclerView)
@@ -37,7 +39,6 @@ class ManageProductsFragment : Fragment() {
         db.collection("Vendors").document(auth.uid!!).get().addOnCompleteListener { rootIt ->
             if (rootIt.isSuccessful) {
                 val category = rootIt.result.getString("Category")
-
                 db.collection("Categories").document(category!!).collection("Subcategories").get().addOnCompleteListener {
                     if (it.isSuccessful) {
                         for (doc in it.result) {
@@ -63,8 +64,8 @@ class ManageProductsFragment : Fragment() {
             val priceEt = dialog.findViewById<EditText>(R.id.productAddPrice)
             val spinner: Spinner = dialog.findViewById(R.id.productAddSpinner)
 
-            val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_dropdown_item, arrayList)
-            spinner.adapter = adapter
+            val arrayAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_dropdown_item, arrayList)
+            spinner.adapter = arrayAdapter
 
             var category: String? = null
 
@@ -95,7 +96,7 @@ class ManageProductsFragment : Fragment() {
                 db.collection("Products").document().set(data).addOnCompleteListener {
                     if (it.isSuccessful) {
                         products.add(Product(description, name, price.toLong(), null, auth.uid!!, null, category!!, time))
-                        adapter.notifyDataSetChanged()
+                        arrayAdapter.notifyDataSetChanged()
                     }
                 }
 
@@ -109,10 +110,11 @@ class ManageProductsFragment : Fragment() {
                 for (document in it.result) {
                     @Suppress("UNCHECKED_CAST")
 
-                    val imageList = ArrayList<String>()
+                    var imageList = ArrayList<String>()
 
                     try {
-                        val imageList = document["Image"] as ArrayList<String>
+                        @Suppress("UNCHECKED_CAST")
+                        imageList = document["Image"] as ArrayList<String>
                     } catch (e: TypeCastException) {
 
                     }
