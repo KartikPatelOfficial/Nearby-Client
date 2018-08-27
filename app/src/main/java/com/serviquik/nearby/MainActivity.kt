@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         toolbarStatic = toolbar
+        supportActionBar!!.title = "Order List"
 
         settings = getSharedPreferences(PREFS_NAME, 0)
 

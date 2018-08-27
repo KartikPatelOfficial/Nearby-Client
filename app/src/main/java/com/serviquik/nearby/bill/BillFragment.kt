@@ -30,6 +30,7 @@ import com.itextpdf.text.pdf.draw.LineSeparator
 import com.itextpdf.text.Paragraph
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
+import com.serviquik.nearby.MainActivity
 import java.io.File
 import java.text.SimpleDateFormat
 
@@ -71,6 +72,7 @@ class BillFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        MainActivity.changeToolbarTitle("Bill")
         val view = inflater.inflate(R.layout.fragment_bill, container, false)
         adapter = BillAdapter(products, context!!)
         val recyclerView: RecyclerView = view.findViewById(R.id.billRecyclerView)
