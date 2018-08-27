@@ -2,6 +2,7 @@ package com.serviquik.nearby.customer
 
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -35,6 +36,16 @@ class ManageCustomerFragment : Fragment() {
         var email = ""
     }
 
+    private lateinit var progressDialog :ProgressDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        progressDialog = ProgressDialog(context,ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog.setTitle("Loading")
+        progressDialog.setMessage("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_manage_customer, container, false)
@@ -43,6 +54,8 @@ class ManageCustomerFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context!!)
         adapter = ManageCustomerAdapter(customers, context!!, fragmentManager!!)
         recyclerView.adapter = adapter
+
+        progressDialog.show()
 
         db.collection("Vendors").document(auth.uid!!).collection("LocalClients").get().addOnCompleteListener {
             if (it.isSuccessful) {
@@ -58,6 +71,7 @@ class ManageCustomerFragment : Fragment() {
                         customers.add(customer)
                     }
                 }
+                progressDialog.dismiss()
                 adapter.notifyDataSetChanged()
             }
         }
@@ -78,8 +92,10 @@ class ManageCustomerFragment : Fragment() {
             button.text = "Next"
             dialogeBuilder.setPositiveButton("Next") { _, _ ->
                 number = editText.text.toString()
+                progressDialog.show()
                 db.collection("Vendors").document(auth.uid!!).collection("LocalClients").whereEqualTo("Number", number).get().addOnCompleteListener {
                     if (it.isSuccessful) {
+                        progressDialog.dismiss()
                         if (it.result != null) {
                             var isExist = false
                             for (document in it.result) {
@@ -100,6 +116,7 @@ class ManageCustomerFragment : Fragment() {
                             otherDialog()
                         }
                     } else {
+                        progressDialog.dismiss()
                         otherDialog()
                     }
                 }

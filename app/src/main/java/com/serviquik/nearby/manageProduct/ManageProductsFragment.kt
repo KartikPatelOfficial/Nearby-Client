@@ -4,6 +4,7 @@ package com.serviquik.nearby.manageProduct
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
@@ -41,15 +42,27 @@ class ManageProductsFragment : Fragment() {
 
     private val galleryRequestCode = 69
 
+    private lateinit var progressDialog : ProgressDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        progressDialog = ProgressDialog(context, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog.setTitle("Loading")
+        progressDialog.setMessage("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+    }
+
     @SuppressLint("InflateParams")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_manage_products, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.productsRecyclerView)
-        val adapter = ProductsAdapter(products, fragmentManager!!)
+        val adapter = ProductsAdapter(products, fragmentManager!!, context!!)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
         val arrayList = ArrayList<String>()
+
+        progressDialog.show()
 
         db.collection("Vendors").document(auth.uid!!).get().addOnCompleteListener { rootIt ->
             if (rootIt.isSuccessful) {
@@ -103,6 +116,8 @@ class ManageProductsFragment : Fragment() {
             }
             dialogeBuilder.setPositiveButton("OK") { _, _ ->
 
+                progressDialog.show()
+
                 val client = OkHttpClient()
                 val requests = ArrayList<Request>()
 
@@ -152,6 +167,7 @@ class ManageProductsFragment : Fragment() {
                                         products.add(Product(description, name, price.toLong(), null, auth.uid!!, null, category!!, time))
                                         arrayAdapter.notifyDataSetChanged()
                                     }
+                                    progressDialog.dismiss()
                                 }
                             }
                         }
@@ -162,7 +178,6 @@ class ManageProductsFragment : Fragment() {
 
             dialogeBuilder.show()
         }
-
         db.collection("Products").whereEqualTo("VendorID", auth.currentUser!!.uid).get().addOnCompleteListener {
             if (it.isSuccessful) {
                 for (document in it.result) {
@@ -195,6 +210,7 @@ class ManageProductsFragment : Fragment() {
             } else {
                 AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
             }
+            progressDialog.dismiss()
         }
 
         return view

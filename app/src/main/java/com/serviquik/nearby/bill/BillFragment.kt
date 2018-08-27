@@ -1,6 +1,7 @@
 package com.serviquik.nearby.bill
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -59,6 +60,16 @@ class BillFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
+    private lateinit var progressDialog :ProgressDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        progressDialog = ProgressDialog(context,ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog.setTitle("Loading")
+        progressDialog.setMessage("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_bill, container, false)
         adapter = BillAdapter(products, context!!)
@@ -74,6 +85,8 @@ class BillFragment : Fragment() {
             sendToDatabase()
         }
 
+        progressDialog.show()
+
         db.collection("Products").whereEqualTo("VendorID", auth.uid).get().addOnCompleteListener {
             if (it.isSuccessful) {
                 for (document in it.result) {
@@ -81,6 +94,7 @@ class BillFragment : Fragment() {
                             Product(document["Description"] as String, document["Name"] as String, document.getLong("Price")!!, null, document.id, null, document.getString("ParentCategory")!!, document.getTimestamp("Time"))
                     )
                 }
+                progressDialog.dismiss()
                 adapter!!.notifyDataSetChanged()
             }
         }
@@ -89,6 +103,7 @@ class BillFragment : Fragment() {
     }
 
     private fun sendToDatabase() {
+        progressDialog.show()
         val data = HashMap<String, Any>()
         data["Price"] = total
         data["Time"] = Timestamp.now()
@@ -112,12 +127,13 @@ class BillFragment : Fragment() {
         val shopName = "Temp"
         var invocation = ""
 
+        progressDialog.dismiss()
+
         for (bill in currentProducts) {
             invocation += "${bill.productName}\t\t\t\t\t ${bill.quantity}\t\t\t\t\t ${bill.productPrice}\n"
         }
 
         val textMail = "Your order from $shopName \n\n $invocation \n\n Grand total : $total"
-
         val i = Intent(Intent.ACTION_SEND)
         i.type = "message/rfc822"
         i.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
@@ -211,7 +227,7 @@ class BillFragment : Fragment() {
         document.add(Chunk(lineSeparator))
         document.add(Paragraph(""))
 
-        val grandTotalChunk = Chunk((total  * .5).toString())
+        val grandTotalChunk = Chunk((total * .5).toString())
         val grandTotalParagraph = Paragraph(grandTotalChunk)
         grandTotalParagraph.alignment = Element.ALIGN_RIGHT
         document.add(grandTotalParagraph)

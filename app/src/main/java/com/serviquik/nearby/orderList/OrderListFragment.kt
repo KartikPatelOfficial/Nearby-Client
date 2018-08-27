@@ -1,5 +1,6 @@
 package com.serviquik.nearby.orderList
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -20,10 +21,22 @@ class OrderListFragment : Fragment() {
 
     private val orders = ArrayList<Order>()
 
+    private lateinit var progressDialog : ProgressDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        progressDialog = ProgressDialog(context, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog.setTitle("Loading")
+        progressDialog.setMessage("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_order_list, container, false)
 
         val adapter = OrderAdapter(orders, context!!)
+
+        progressDialog.show()
 
         val recyclerView: RecyclerView = view.findViewById(R.id.orderRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context!!)
@@ -80,6 +93,7 @@ class OrderListFragment : Fragment() {
             } else {
                 AlertDialog.Builder(context!!).setTitle("Error").setMessage(orderIt.exception!!.localizedMessage).show()
             }
+            progressDialog.dismiss()
         }
     }
 
@@ -118,6 +132,7 @@ class OrderListFragment : Fragment() {
             } else {
                 AlertDialog.Builder(context!!).setTitle("Error").setMessage(orderIt.exception!!.localizedMessage).show()
             }
+            progressDialog.dismiss()
         }
     }
 

@@ -8,7 +8,9 @@
     android:layout_height="wrap_content">
 
     <android.support.design.card.MaterialCardView
+        app:cardBackgroundColor="@color/colorPrimary"
         android:id="@+id/cardCustomerBack"
+        app:cardCornerRadius="8dp"
         android:elevation="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -32,8 +34,9 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/cardCustomerImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_person_black_24dp"
                     app:civ_border_color="@color/white"
                     app:civ_border_width="1dp" />

@@ -1,6 +1,7 @@
 package com.serviquik.nearby.offer
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -46,12 +47,24 @@ class OfferFragment : Fragment() {
         val adapter = OfferAdapter(offers)
     }
 
+    private lateinit var progressDialog : ProgressDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        progressDialog = ProgressDialog(context, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog.setTitle("Loading")
+        progressDialog.setMessage("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_offer, container, false)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.offerRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
+
+        progressDialog.show()
 
         db.collection("Products").whereEqualTo("VendorID", auth.uid).get().addOnCompleteListener { productIt ->
             if (productIt.isSuccessful) {
@@ -96,6 +109,8 @@ class OfferFragment : Fragment() {
                 AlertDialog.Builder(context!!).setTitle("Error").setMessage(productIt.exception!!.localizedMessage).show()
                 return@addOnCompleteListener
             }
+
+            progressDialog.dismiss()
         }
 
         view.findViewById<FloatingActionButton>(R.id.offerFab).setOnClickListener { _ ->
@@ -117,9 +132,8 @@ class OfferFragment : Fragment() {
             }
 
             dialogeBuilder.setPositiveButton("Add") { _, _ ->
-
+                progressDialog.show()
                 val client = OkHttpClient()
-
                 val offer = dialog.findViewById<EditText>(R.id.alertOfferOffer).text
                 val product = products[spinner.selectedItemPosition]
 
@@ -161,7 +175,6 @@ class OfferFragment : Fragment() {
     }
 
     private fun addToDatabase(offer: Offer) {
-
         val data = HashMap<String, Any?>()
         data["Offer"] = offer.offer
         data["ImageURL"] = offer.picture
@@ -177,6 +190,7 @@ class OfferFragment : Fragment() {
                     AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
                 }
             }
+            progressDialog.dismiss()
         }
     }
 

@@ -2,6 +2,7 @@ package com.serviquik.nearby
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -61,11 +62,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             toolbarStatic!!.title = title
         }
 
-        fun changeNavBarProfilePicture(path:String){
+        fun changeNavBarProfilePicture(path: String) {
             Picasso.get().load(path).into(profilePictureTv)
         }
 
     }
+
+    private lateinit var progressDialog: ProgressDialog
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +79,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toolbarStatic = toolbar
 
         settings = getSharedPreferences(PREFS_NAME, 0)
+
+        progressDialog = ProgressDialog(this, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog.setTitle("Loading")
+        progressDialog.setMessage("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+        progressDialog.show()
 
         val window = window
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -172,6 +182,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     emailTV.text = email
                 }
             }
+            progressDialog.dismiss()
         }
 
     }

@@ -19,6 +19,7 @@ import com.serviquik.nearby.R
 import com.serviquik.nearby.auth.LoginActivity
 import android.widget.Toast
 import android.app.Activity.RESULT_OK
+import android.app.ProgressDialog
 import android.graphics.drawable.Drawable
 import android.os.Handler
 import com.squareup.okhttp.*
@@ -37,17 +38,29 @@ class ProfileFragment : Fragment() {
     private lateinit var emailTv: TextView
     private lateinit var phoneTv: TextView
     private lateinit var titleTV: TextView
-    private lateinit var profilePicture : ImageView
+    private lateinit var profilePicture: ImageView
 
     private val handler = Handler(Looper.getMainLooper())
 
 
     private val galleryRequestCode = 108
 
+    private lateinit var progressDialog: ProgressDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        progressDialog = ProgressDialog(context, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog.setTitle("Loading")
+        progressDialog.setMessage("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         profilePicture = view.findViewById(R.id.circleImageView)
+
+        progressDialog.show()
 
         profilePicture.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -84,6 +97,7 @@ class ProfileFragment : Fragment() {
             addOnClickListener(view.findViewById(R.id.profilePhoneEdit), "Number")
             addOnClickListener(view.findViewById(R.id.profileTitleEdit), "Title")
 
+            progressDialog.dismiss()
         }
 
         return view
@@ -196,9 +210,12 @@ class ProfileFragment : Fragment() {
     private fun addDataToDatabase(string: String, key: String) {
         val data = HashMap<String, Any>()
         data[key] = string
-
-        db.collection("Vendors").document(auth.currentUser!!.uid).update(data).addOnFailureListener {
-            AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.localizedMessage).show()
+        progressDialog.show()
+        db.collection("Vendors").document(auth.currentUser!!.uid).update(data).addOnCompleteListener {
+            progressDialog.dismiss()
+            if (!it.isSuccessful) {
+                AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
+            }
         }
     }
 }

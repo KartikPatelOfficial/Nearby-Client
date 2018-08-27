@@ -1,6 +1,7 @@
 package com.serviquik.nearby.auth
 
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
@@ -42,6 +43,17 @@ class SignInFragment : Fragment() {
     var verificationID: String? = null
     var token: PhoneAuthProvider.ForceResendingToken? = null
 
+    private lateinit var progressDialog: ProgressDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        progressDialog = ProgressDialog(context, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog.setTitle("Loading")
+        progressDialog.setMessage("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_sign_in, container, false)
 
@@ -71,6 +83,7 @@ class SignInFragment : Fragment() {
 
             if (isOTP) {
                 phoneNumber = text
+                progressDialog.show()
                 verifyPhoneNumberWithCode(verificationID!!, phoneNumber)
             } else {
                 if (text.length != 10) {
@@ -87,9 +100,9 @@ class SignInFragment : Fragment() {
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(activity!!) { task ->
+                    progressDialog.dismiss()
                     if (task.isSuccessful) {
                         val uid = auth.currentUser!!.uid
-
                         FirebaseFirestore.getInstance().collection("Vendors").document(uid).get().addOnCompleteListener {
                             if (it.isSuccessful) {
                                 Toast.makeText(activity!!, "Welcome ${it.result.getString("Name")}", Toast.LENGTH_LONG).show()

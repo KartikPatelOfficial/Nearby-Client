@@ -20,7 +20,7 @@ data class Order(var name: String = "Name",
         val REJECTED = 4
         val COMPLETED = 5
 
-        val PROGRESSEDCOLOR = "#4CAF50"
+        val PROGRESSEDCOLOR = "#FBC02D"
         val APPROVEDCOLOR = "#03A9F4"
         val PENDINGCOLOR = "#E91E63"
         val CANCELLEDCOLOR = "#FF5722"
