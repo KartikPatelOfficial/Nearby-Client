@@ -139,10 +139,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-
         nav_view.setNavigationItemSelectedListener(this)
-
         changeFragment(OrderListFragment())
+
+        if (auth.currentUser!!.displayName == null) {
+            val bundle = Bundle()
+            bundle.putString("phone", intent.getStringExtra("phone"))
+
+            val fragment = ProfileFragment()
+            fragment.arguments = bundle
+            changeFragment(fragment)
+        }
 
     }
 

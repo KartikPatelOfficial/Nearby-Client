@@ -90,6 +90,7 @@ class SignInFragment : Fragment() {
                     AlertDialog.Builder(context!!).setTitle("Error").setMessage("Please enter correct mobile number. without any contry code(+91)").show()
                     return@setOnClickListener
                 }
+                phoneNumber = text
                 startPhoneNumberVerification("+91$text")
             }
         }
@@ -218,7 +219,9 @@ class SignInFragment : Fragment() {
     }
 
     private fun startMainActivity() {
-        startActivity(Intent(context!!, MainActivity::class.java))
+        val intent = Intent(context!!, MainActivity::class.java)
+        intent.putExtra("phone",phoneNumber)
+        startActivity(intent)
         activity!!.finish()
     }
 

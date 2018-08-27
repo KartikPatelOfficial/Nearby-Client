@@ -27,6 +27,7 @@ import com.squareup.okhttp.*
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import java.util.*
 
 
 class ManageProductsFragment : Fragment() {
@@ -42,7 +43,7 @@ class ManageProductsFragment : Fragment() {
 
     private val galleryRequestCode = 69
 
-    private lateinit var progressDialog : ProgressDialog
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -216,6 +217,8 @@ class ManageProductsFragment : Fragment() {
         return view
 
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

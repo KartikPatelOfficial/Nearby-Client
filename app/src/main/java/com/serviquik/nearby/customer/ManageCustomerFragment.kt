@@ -34,13 +34,14 @@ class ManageCustomerFragment : Fragment() {
         var name = ""
         var number = ""
         var email = ""
+        var cid = ""
     }
 
-    private lateinit var progressDialog :ProgressDialog
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        progressDialog = ProgressDialog(context,ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog = ProgressDialog(context, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
         progressDialog.setTitle("Loading")
         progressDialog.setMessage("Please wait")
         progressDialog.setCanceledOnTouchOutside(false)
@@ -101,6 +102,7 @@ class ManageCustomerFragment : Fragment() {
                             for (document in it.result) {
                                 if (document.exists()) {
                                     isExist = true
+                                    cid = document.id
                                     name = document.getString("Name")!!
                                     email = document.getString("Email")!!
                                 } else {
@@ -151,11 +153,19 @@ class ManageCustomerFragment : Fragment() {
             data["Name"] = name
             data["Number"] = number
             data["Email"] = email
-            db.collection("Vendors").document(auth.uid!!).collection("LocalClients").document().set(data).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    makeBill()
+            data["isLocal"] = true
+            db.collection("Vendors").document(auth.uid!!).collection("LocalClients").document().set(data).addOnCompleteListener { addIt ->
+                if (addIt.isSuccessful) {
+
+                    db.collection("Vendors").document(auth.uid!!).collection("LocalClients").whereEqualTo("Number", number).get().addOnCompleteListener {
+                        for (i in it.result) {
+                            cid = i.id
+                        }
+                        makeBill()
+                    }
+
                 } else {
-                    AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
+                    AlertDialog.Builder(context!!).setTitle("Error").setMessage(addIt.exception!!.localizedMessage).show()
                 }
             }
         }
