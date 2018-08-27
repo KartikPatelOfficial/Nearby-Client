@@ -81,6 +81,7 @@ class ProductsAdapter(private val products: ArrayList<Product>, val fragmentMana
 
         holder.editBtn.setOnClickListener {
             Log.d("----->", product.parentID)
+
         }
     }
 
