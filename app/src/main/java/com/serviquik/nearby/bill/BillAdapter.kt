@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.text.SpannableStringBuilder
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,15 @@ import com.serviquik.nearby.manageProduct.Product
 class BillAdapter(private val products: ArrayList<Product>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
 
     private val productName = ArrayList<String>()
-    private var temp = 0
+
+    lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
+        for (name in products) {
+            productName.add(name.title)
+        }
+        adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, productName)
+
         return ViewHolder(LayoutInflater.from(p0.context).inflate(R.layout.card_bill_add, p0, false))
     }
 
@@ -29,29 +36,21 @@ class BillAdapter(private val products: ArrayList<Product>, val context: Context
     }
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        if (temp <= 1) {
-            addName()
-        }
-
-        val adapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, productName)
         p0.spinner.adapter = adapter
-
         p0.addBtn.setOnClickListener {
             val price = products[p0.spinner.selectedItemPosition].price
-            val quantity = Integer.parseInt(p0.quantityET.text.toString())
+            val quantityText = p0.quantityET.text.toString()
+            if (TextUtils.isEmpty(quantityText)) {
+                p0.quantityET.error = "please enter quantity"
+                return@setOnClickListener
+            }
+            val quantity = Integer.parseInt(quantityText)
             BillFragment.currentProducts.add(Bill(products[p0.spinner.selectedItemPosition].title, price, quantity))
             BillFragment.count += 1
             BillFragment.adapter!!.notifyItemChanged(p1 + 1)
-            BillFragment.total = BillFragment.makeTotal(price,quantity)
+            BillFragment.total = BillFragment.makeTotal(price, quantity)
             BillFragment.totalText.text = "₹ ${BillFragment.total}"
         }
-    }
-
-    private fun addName() {
-        for (name in products) {
-            productName.add(name.title)
-        }
-        temp += 1
     }
 }
 

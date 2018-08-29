@@ -14,7 +14,6 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.serviquik.nearby.MainActivity
 import com.serviquik.nearby.R
-import com.serviquik.nearby.auth.LoginActivity
 import com.serviquik.nearby.manageProduct.Product
 
 class ReviewsFragment : Fragment() {

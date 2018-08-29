@@ -41,7 +41,7 @@ class BillFragment : Fragment() {
     val name = ManageCustomerFragment.name
     val number = ManageCustomerFragment.number
     val email = ManageCustomerFragment.email
-    val cid = ManageCustomerFragment.cid
+    private val cid = ManageCustomerFragment.cid
 
     companion object {
         var total: Long = 0

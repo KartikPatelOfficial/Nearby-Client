@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,13 +108,10 @@ class ManageProductsFragment : Fragment() {
             var category: String? = null
 
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
-
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     category = arrayList[p2]
                 }
-
             }
             dialogeBuilder.setPositiveButton("OK") { _, _ ->
 
@@ -124,8 +122,19 @@ class ManageProductsFragment : Fragment() {
 
                 val description = descriptionEt.text.toString()
                 val name = nameEt.text.toString()
-                val price = Integer.parseInt(priceEt.text.toString())
+                val strPrice = priceEt.text.toString()
                 val time = Timestamp.now()
+
+                if (checkNull(descriptionEt, description)) {
+                    return@setPositiveButton
+                }
+                if (checkNull(nameEt, name)) {
+                    return@setPositiveButton
+                }
+                if (checkNull(priceEt, strPrice)) {
+                    return@setPositiveButton
+                }
+                val price = Integer.parseInt(strPrice)
 
                 for ((i, file) in files.withIndex()) {
 
@@ -218,7 +227,13 @@ class ManageProductsFragment : Fragment() {
 
     }
 
-
+    private fun checkNull(view: EditText, string: String): Boolean {
+        if (TextUtils.isEmpty(string)) {
+            view.error = "Please enter detail"
+            return true
+        }
+        return false
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

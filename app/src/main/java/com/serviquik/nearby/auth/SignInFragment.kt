@@ -47,7 +47,6 @@ class SignInFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         progressDialog = ProgressDialog(context, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
         progressDialog.setTitle("Loading")
         progressDialog.setMessage("Please wait")
@@ -81,6 +80,11 @@ class SignInFragment : Fragment() {
         okButton.setOnClickListener {
             val text = editText.text.toString()
 
+            if (TextUtils.isEmpty(text)) {
+                editText.error = "Please enter phone number"
+                return@setOnClickListener
+            }
+
             if (isOTP) {
                 phoneNumber = text
                 progressDialog.show()
@@ -91,6 +95,7 @@ class SignInFragment : Fragment() {
                     return@setOnClickListener
                 }
                 phoneNumber = text
+                progressDialog.show()
                 startPhoneNumberVerification("+91$text")
             }
         }
@@ -220,7 +225,7 @@ class SignInFragment : Fragment() {
 
     private fun startMainActivity() {
         val intent = Intent(context!!, MainActivity::class.java)
-        intent.putExtra("phone",phoneNumber)
+        intent.putExtra("phone", phoneNumber)
         startActivity(intent)
         activity!!.finish()
     }

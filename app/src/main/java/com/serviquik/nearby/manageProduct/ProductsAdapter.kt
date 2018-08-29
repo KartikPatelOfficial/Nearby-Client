@@ -52,7 +52,7 @@ class ProductsAdapter(private val products: ArrayList<Product>, private val frag
         holder.titleTV.text = product.title
         holder.priceTV.text = "₹ " + product.price
         try {
-            Picasso.get().load(Uri.parse(product.images!![0])).into(holder.imageView)
+            Picasso.get().load(Uri.parse(product.images!![0])).fit().into(holder.imageView)
         } catch (e: NullPointerException) {
         } catch (e: IndexOutOfBoundsException) {
         }

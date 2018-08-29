@@ -93,6 +93,10 @@ class ManageCustomerFragment : Fragment() {
             button.text = "Next"
             dialogeBuilder.setPositiveButton("Next") { _, _ ->
                 number = editText.text.toString()
+                if (TextUtils.isEmpty(number)) {
+                    editText.error = "Please enter mobile number"
+                    return@setPositiveButton
+                }
                 progressDialog.show()
                 db.collection("Vendors").document(auth.uid!!).collection("LocalClients").whereEqualTo("Number", number).get().addOnCompleteListener {
                     if (it.isSuccessful) {
@@ -143,6 +147,7 @@ class ManageCustomerFragment : Fragment() {
         dialogeBuilder.setPositiveButton("Ok") { _, _ ->
             name = nameEt.text.toString()
             email = emailEt.text.toString()
+
             if (checkNull(nameEt, name)) {
                 return@setPositiveButton
             }

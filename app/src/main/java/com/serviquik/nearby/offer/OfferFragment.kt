@@ -35,7 +35,7 @@ class OfferFragment : Fragment() {
     private val auth = FirebaseAuth.getInstance()
 
     private val products = ArrayList<Product>()
-    private val productsMap = HashMap<String,Product>()
+    private val productsMap = HashMap<String, Product>()
     private val productsNames = ArrayList<String>()
     private val requestGalleryCode = 69
     private lateinit var file: File
@@ -47,7 +47,7 @@ class OfferFragment : Fragment() {
         val adapter = OfferAdapter(offers)
     }
 
-    private lateinit var progressDialog : ProgressDialog
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,13 +94,15 @@ class OfferFragment : Fragment() {
                 }
 
                 db.collection("Vendors").document(auth.uid!!).collection("Offers").get().addOnCompleteListener {
-                    if (it.isSuccessful){
-                        for (doc in it.result){
+                    if (it.isSuccessful) {
+                        for (doc in it.result) {
                             val id = doc.getString("ProductID")
-                            offers.add(Offer(doc.getString("Offer"),doc.getString("ImageURL"),productsMap[id]!!))
+                            if(offers.size < it.result.size()) {
+                                offers.add(Offer(doc.getString("Offer"), doc.getString("ImageURL"), productsMap[id]!!))
+                            }
                         }
                         adapter.notifyDataSetChanged()
-                    }else{
+                    } else {
                         AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
                     }
                 }
@@ -122,6 +124,7 @@ class OfferFragment : Fragment() {
             dialogeBuilder.setTitle("Add Offer")
 
             val spinner = dialog.findViewById<Spinner>(R.id.alertOfferSpinner)
+            val offerEt = dialog.findViewById<EditText>(R.id.alertOfferOffer)
 
             val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_dropdown_item, productsNames)
             spinner.adapter = adapter
@@ -134,7 +137,7 @@ class OfferFragment : Fragment() {
             dialogeBuilder.setPositiveButton("Add") { _, _ ->
                 progressDialog.show()
                 val client = OkHttpClient()
-                val offer = dialog.findViewById<EditText>(R.id.alertOfferOffer).text
+                val offer = offerEt.text.toString()
                 val product = products[spinner.selectedItemPosition]
 
                 val requestBody = MultipartBuilder()
@@ -160,7 +163,7 @@ class OfferFragment : Fragment() {
                         val r = response!!.body().string()
                         val root = JSONObject(r)
                         val profileURL = root.getString("url")
-                        addToDatabase(Offer(offer.toString(), profileURL, product))
+                        addToDatabase(Offer(offer, profileURL, product))
                     }
 
                 })

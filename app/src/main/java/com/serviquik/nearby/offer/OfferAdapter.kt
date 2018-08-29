@@ -30,7 +30,7 @@ class OfferAdapter(private val offers: ArrayList<Offer>) : RecyclerView.Adapter<
         }
 
         if (offer.picture != null) {
-            Picasso.get().load(offer.picture).into(p0.imageView)
+            Picasso.get().load(offer.picture).fit().into(p0.imageView)
         } else {
             p0.imageView.visibility = View.GONE
         }

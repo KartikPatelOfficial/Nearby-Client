@@ -55,5 +55,6 @@
     <string name="more">More</string>
     <string name="image">Image</string>
     <string name="select_image">Select Image</string>
+    <string name="organization_name">Organization Name</string>
 
 </resources>

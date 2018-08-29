@@ -94,8 +94,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         addDataInDrawer()
 
-        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+            }
         }
 
         titles.add(getString(R.string.order_list))
@@ -142,15 +144,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
         changeFragment(OrderListFragment())
 
-        if (auth.currentUser!!.displayName == null) {
-            val bundle = Bundle()
-            bundle.putString("phone", intent.getStringExtra("phone"))
-
-            val fragment = ProfileFragment()
-            fragment.arguments = bundle
-            changeFragment(fragment)
-        }
-
     }
 
     private fun addDataInDrawer() {
@@ -186,6 +179,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val email = document.getString("Email")
 
                 runOnUiThread {
+                    if (name == null) {
+                        val bundle = Bundle()
+                        bundle.putString("phone", intent.getStringExtra("phone"))
+                        bundle.putBoolean("isNew",true)
+                        val fragment = ProfileFragment()
+                        fragment.arguments = bundle
+                        changeFragment(fragment)
+                    }
                     nameTV.text = name
                     emailTV.text = email
                 }
@@ -234,7 +235,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val ft = supportFragmentManager!!.beginTransaction()
         ft.replace(R.id.container, fragment)
         ft.commit()
-
     }
 
 }

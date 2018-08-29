@@ -97,7 +97,7 @@ class OrderListFragment : Fragment() {
         }
     }
 
-    fun getAllOrders(adapter: OrderAdapter, recyclerView: RecyclerView) {
+    private fun getAllOrders(adapter: OrderAdapter, recyclerView: RecyclerView) {
         val orderRef = db.collection("Vendors").document(auth.uid!!).collection("OrderList")
 
         orderRef.get().addOnCompleteListener { orderIt ->

@@ -30,12 +30,16 @@ import com.squareup.okhttp.*
 import java.io.File
 import java.io.IOException
 import android.os.Looper
+import android.support.design.widget.TextInputLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.text.TextUtils
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.Listener
 import com.google.firebase.firestore.GeoPoint
+import com.itextpdf.text.pdf.TextField
 import com.serviquik.nearby.MainActivity
+import com.serviquik.nearby.orderList.OrderListFragment
 import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
@@ -105,59 +109,88 @@ class ProfileFragment : Fragment() {
             startActivityForResult(intent, galleryRequestCode)
         }
 
-        if (auth.currentUser!!.displayName == null) {
-            val inflater1 = LayoutInflater.from(context!!)
-            val dialog = inflater1.inflate(R.layout.alert_profile_required, null)
-            val dialogeBuilder = AlertDialog.Builder(context!!)
-            dialogeBuilder.setView(dialog)
-            dialogeBuilder.setTitle("Hello,")
+        var temp = false
 
-            val spinner = dialog.findViewById<Spinner>(R.id.profileSpinner)
-            val arrayList = ArrayList<String>()
-            val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_dropdown_item, arrayList)
-            spinner.adapter = adapter
+        try {
+            temp = arguments!!["isNew"] as Boolean
+        } catch (e: KotlinNullPointerException) {
+            e.printStackTrace()
+        }
 
-            db.collection("Categories").get().addOnCompleteListener {
-                if (it.isSuccessful) {
-                    for (doc in it.result) {
-                        arrayList.add(doc.id)
-                        adapter.notifyDataSetChanged()
-                    }
-                } else {
-                    AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
-                }
-            }
+        if (temp) {
 
-            dialogeBuilder.setCancelable(false)
-            dialogeBuilder.setPositiveButton("Ok") { _, _ ->
+            if (temp) {
+                val inflater1 = LayoutInflater.from(context!!)
+                val dialog = inflater1.inflate(R.layout.alert_profile_required, null)
+                val dialogeBuilder = AlertDialog.Builder(context!!)
+                dialogeBuilder.setView(dialog)
+                dialogeBuilder.setTitle("Hello,")
 
-                val name = dialog.findViewById<EditText>(R.id.profileNameEt).text.toString()
-                val email = dialog.findViewById<EditText>(R.id.profileEmailEt).text.toString()
-                val address = dialog.findViewById<EditText>(R.id.profileAddressEt).text.toString()
-                val title = dialog.findViewById<EditText>(R.id.profileTitleEt).text.toString()
-                val category = spinner.selectedItem.toString()
-                val location = GeoPoint(lat!!, long!!)
+                val nameEt = dialog.findViewById<EditText>(R.id.profileNameEt)
+                val emailEt = dialog.findViewById<EditText>(R.id.profileEmailEt)
+                val addressEt = dialog.findViewById<EditText>(R.id.profileAddressEt)
+                val titleEt = dialog.findViewById<EditText>(R.id.profileTitleEt)
 
-                val data = HashMap<String, Any?>()
-                data["Address1"] = address
-                data["Category"] = category
-                data["Location"] = location
-                data["Name"] = name
-                data["Number"] = arguments!!["phone"]!!.toString()
-                data["Email"] = email
-                data["Title"] = title
+                val spinner = dialog.findViewById<Spinner>(R.id.profileSpinner)
+                val arrayList = ArrayList<String>()
+                val adapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_dropdown_item, arrayList)
+                spinner.adapter = adapter
 
-                db.collection("Vendors").document(auth.uid!!).set(data).addOnCompleteListener {
+                db.collection("Categories").get().addOnCompleteListener {
                     if (it.isSuccessful) {
-                        startActivity(Intent(context, MainActivity::class.java))
-                        activity!!.finish()
+                        for (doc in it.result) {
+                            arrayList.add(doc.id)
+                            adapter.notifyDataSetChanged()
+                        }
                     } else {
                         AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
                     }
                 }
-            }
-            dialogeBuilder.show()
 
+                dialogeBuilder.setCancelable(false)
+                dialogeBuilder.setPositiveButton("Ok") { _, _ ->
+
+                    val name = nameEt.text.toString()
+                    if (checkNull(name, nameEt, "name")) {
+                        return@setPositiveButton
+                    }
+                    val email = emailEt.text.toString()
+                    if (checkNull(email, emailEt, "email")) {
+                        return@setPositiveButton
+                    }
+                    val address = addressEt.text.toString()
+                    if (checkNull(address, addressEt, "address")) {
+                        return@setPositiveButton
+                    }
+                    val title = titleEt.text.toString()
+                    if (checkNull(title, titleEt, "organization name")) {
+                        return@setPositiveButton
+                    }
+                    val category = spinner.selectedItem.toString()
+                    val location = GeoPoint(lat!!, long!!)
+
+                    val data = HashMap<String, Any?>()
+                    data["Address1"] = address
+                    data["Category"] = category
+                    data["Location"] = location
+                    data["Name"] = name
+                    data["Number"] = arguments!!["phone"]!!.toString()
+                    data["Email"] = email
+                    data["Title"] = title
+
+                    db.collection("Vendors").document(auth.uid!!).set(data).addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            val ft = fragmentManager!!.beginTransaction()
+                            ft.replace(R.id.container, OrderListFragment())
+                            ft.commit()
+                        } else {
+                            AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
+                        }
+                    }
+                }
+                dialogeBuilder.show()
+
+            }
         }
 
         db.collection("Vendors").document(auth.currentUser!!.uid).get().addOnCompleteListener { it ->
@@ -186,10 +219,10 @@ class ProfileFragment : Fragment() {
             titleTV = view.findViewById(R.id.profileTitleTV)
             titleTV.text = document["Title"] as String?
 
-
             addOnClickListener(view.findViewById(R.id.profileAdd1Edit), "Address1")
             addOnClickListener(view.findViewById(R.id.profilePhoneEdit), "Number")
             addOnClickListener(view.findViewById(R.id.profileTitleEdit), "Title")
+            addOnClickListener(view.findViewById(R.id.profileEmailEdit), "Email")
 
             progressDialog.dismiss()
         }
@@ -215,16 +248,28 @@ class ProfileFragment : Fragment() {
             dialogBuilder.setView(dialogView)
 
             val edt = dialogView.findViewById<View>(R.id.edit1) as EditText
+            val til = dialogView.findViewById<TextInputLayout>(R.id.editTIL)
 
             when (key) {
                 "Number" -> {
                     edt.inputType = InputType.TYPE_CLASS_NUMBER
                     edt.hint = "Phone Number"
+                    til.hint = "Phone Number"
                 }
 
-                "Address1" -> edt.hint = "Address Line 1"
-                "Address2" -> edt.hint = "Address Line 2"
-                "Title" -> edt.hint = "Title"
+                "Address1" -> {
+                    edt.hint = "Address Line"
+                    til.hint = "Address Line"
+                }
+                "Title" -> {
+                    edt.hint = "Title"
+                    til.hint = "Title"
+
+                }
+                "Email" -> {
+                    edt.hint = "Email"
+                    til.hint = "Email"
+                }
             }
 
             dialogBuilder.setTitle("Edit")
@@ -299,6 +344,14 @@ class ProfileFragment : Fragment() {
             Toast.makeText(context, "Something Went Wrong", Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    private fun checkNull(text: String, editText: EditText, title: String): Boolean {
+        if (TextUtils.isEmpty(text)) {
+            editText.error = "Please enter our $title"
+            return true
+        }
+        return false
     }
 
     private fun getAddressFromLatLon(lat: Double?, long: Double?): String? {
