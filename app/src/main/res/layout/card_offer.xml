@@ -7,12 +7,13 @@
     <android.support.design.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:elevation="4dp">
 
         <LinearLayout
-            android:layout_margin="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:orientation="vertical"
             tools:ignore="UseCompoundDrawables">
 
@@ -22,13 +23,29 @@
                 android:layout_height="170dp"
                 tools:ignore="ContentDescription" />
 
-            <TextView
-                android:id="@+id/cardOfferOffer"
-                android:layout_marginTop="8dp"
-                android:text="Offer title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:ignore="HardcodedText" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/cardOfferOffer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:text="Offer title"
+                    tools:ignore="HardcodedText" />
+
+                <ImageButton
+                    android:id="@+id/cardOfferDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="#00FFFFFF"
+                    android:src="@drawable/ic_delete_black_24dp"
+                    tools:ignore="ContentDescription" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

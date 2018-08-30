@@ -1,6 +1,7 @@
 package com.serviquik.nearby.manageProduct
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
@@ -14,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.serviquik.nearby.R
 import com.serviquik.nearby.review.ReviewsFragment
@@ -26,6 +28,8 @@ class ProductsAdapter(private val products: ArrayList<Product>, private val frag
 
     private val colors = ArrayList<String>()
 
+    private lateinit var progressDialog: ProgressDialog
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
         colors.add("#FF9800")
         colors.add("#FF5722")
@@ -34,6 +38,12 @@ class ProductsAdapter(private val products: ArrayList<Product>, private val frag
         colors.add("#673AB7")
         colors.add("#F44336")
         colors.add("#3F51B5")
+
+        progressDialog = ProgressDialog(context, ProgressDialog.THEME_DEVICE_DEFAULT_LIGHT)
+        progressDialog.setTitle("Loading")
+        progressDialog.setMessage("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+
         return Viewholder(LayoutInflater.from(parent.context).inflate(R.layout.card_products, parent, false))
 
     }
@@ -98,6 +108,26 @@ class ProductsAdapter(private val products: ArrayList<Product>, private val frag
             priceEt.text = SpannableStringBuilder(product.price.toString())
             descriptionEt.text = SpannableStringBuilder(product.description)
 
+            holder.editBtn.setOnClickListener {
+                AlertDialog.Builder(context)
+                        .setTitle("Warning")
+                        .setMessage("Are you sure ou want to delete offer?")
+                        .setPositiveButton("Yes") { _, _ ->
+                            progressDialog.show()
+                            FirebaseFirestore.getInstance()
+                                    .collection("Vendor")
+                                    .document(FirebaseAuth.getInstance().uid!!)
+                                    .collection("Products").document(product.parentID).delete().addOnCompleteListener { vendorIt ->
+                                        if (!vendorIt.isSuccessful) {
+                                            AlertDialog.Builder(context).setTitle("Error").setMessage(vendorIt.exception!!.localizedMessage).show()
+                                        }
+                                        progressDialog.dismiss()
+
+                                    }
+                        }
+                        .show()
+            }
+
             dialogeBuilder.setPositiveButton("Update") { _, _ ->
                 val description = descriptionEt.text.toString()
                 val name = nameEt.text.toString()
@@ -126,6 +156,6 @@ class Viewholder(view: View) : RecyclerView.ViewHolder(view) {
     val descriptionTV: TextView = view.findViewById(R.id.productCardDescription)
     val priceTV: TextView = view.findViewById(R.id.productCardPrice)
     val imageView: ImageView = view.findViewById(R.id.productCardImage)
-    val editBtn: Button = view.findViewById(R.id.productCardEdit)
+    val editBtn: ImageButton = view.findViewById(R.id.productCardEdit)
     val ratingBar: ScaleRatingBar = view.findViewById(R.id.productsCardRatingBar)
 }

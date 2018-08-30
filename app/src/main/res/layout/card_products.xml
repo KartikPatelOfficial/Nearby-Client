@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginTop="8dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp">
 
     <android.support.design.card.MaterialCardView
-        app:cardBackgroundColor="@color/colorPrimary"
+        android:id="@+id/productCardBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/productCardBackground"
         android:elevation="4dp"
+        app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="10dp">
 
         <LinearLayout
@@ -93,27 +93,31 @@
                     android:id="@+id/productsCardRatingBar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:srb_numStars="5"
-                    android:layout_weight="1"
-                    app:srb_minimumStars="1"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:gravity="center"
-                    app:srb_rating="2"
-                    app:srb_starWidth="30dp"
-                    app:srb_starHeight="30dp"
-                    app:srb_stepSize="0.5"
-                    app:srb_isIndicator="true"
+                    app:srb_clearRatingEnabled="true"
                     app:srb_clickable="false"
+                    app:srb_isIndicator="true"
+                    app:srb_minimumStars="1"
+                    app:srb_numStars="5"
+                    app:srb_rating="2"
                     app:srb_scrollable="false"
-                    app:srb_clearRatingEnabled="true"/>
+                    app:srb_starHeight="30dp"
+                    app:srb_starWidth="30dp"
+                    app:srb_stepSize="0.5" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/productCardEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_border"
-                    android:text="@string/edit"
-                    android:textColor="@color/white" />
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="16dp"
+                    android:background="#00AAAAAA"
+                    android:src="@drawable/ic_delete_black_24dp"
+                    android:textColor="@color/white"
+                    android:tint="@color/white"
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
 

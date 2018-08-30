@@ -1,5 +1,6 @@
 package com.serviquik.nearby.offer
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
@@ -44,7 +45,8 @@ class OfferFragment : Fragment() {
 
     companion object {
         private val offers = ArrayList<Offer>()
-        val adapter = OfferAdapter(offers)
+        @SuppressLint("StaticFieldLeak")
+        lateinit var adapter: OfferAdapter
     }
 
     private lateinit var progressDialog: ProgressDialog
@@ -59,6 +61,8 @@ class OfferFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_offer, container, false)
+
+        adapter = OfferAdapter(offers, context!!)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.offerRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -97,8 +101,8 @@ class OfferFragment : Fragment() {
                     if (it.isSuccessful) {
                         for (doc in it.result) {
                             val id = doc.getString("ProductID")
-                            if(offers.size < it.result.size()) {
-                                offers.add(Offer(doc.getString("Offer"), doc.getString("ImageURL"), productsMap[id]!!))
+                            if (offers.size < it.result.size()) {
+                                offers.add(Offer(doc.getString("Offer"), doc.getString("ImageURL"), productsMap[id]!!, doc.id))
                             }
                         }
                         adapter.notifyDataSetChanged()
@@ -163,7 +167,7 @@ class OfferFragment : Fragment() {
                         val r = response!!.body().string()
                         val root = JSONObject(r)
                         val profileURL = root.getString("url")
-                        addToDatabase(Offer(offer, profileURL, product))
+                        addToDatabase(Offer(offer, profileURL, product, null))
                     }
 
                 })
