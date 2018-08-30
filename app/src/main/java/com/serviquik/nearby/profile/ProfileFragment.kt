@@ -291,6 +291,8 @@ class ProfileFragment : Fragment() {
 
         if (requestCode == galleryRequestCode && resultCode == RESULT_OK && data != null && data.data != null) {
 
+            progressDialog.show()
+
             val realPath = ImageFilePath.getPath(context, data.data)
             val client = OkHttpClient()
             val file = File(realPath)
@@ -334,6 +336,7 @@ class ProfileFragment : Fragment() {
                         } else {
                             AlertDialog.Builder(context!!).setTitle("Error").setMessage(it.exception!!.localizedMessage).show()
                         }
+                        progressDialog.dismiss()
 
                     }
                 }

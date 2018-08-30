@@ -73,7 +73,6 @@ class OfferFragment : Fragment() {
         db.collection("Products").whereEqualTo("VendorID", auth.uid).get().addOnCompleteListener { productIt ->
             if (productIt.isSuccessful) {
                 for (doc in productIt.result) {
-
                     var rating: String? = null
                     try {
                         rating = doc.getString("Rating")
