@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.serviquik.nearby.profile
 
 
@@ -37,7 +39,6 @@ import android.text.TextUtils
 import com.example.easywaylocation.EasyWayLocation
 import com.example.easywaylocation.Listener
 import com.google.firebase.firestore.GeoPoint
-import com.itextpdf.text.pdf.TextField
 import com.serviquik.nearby.MainActivity
 import com.serviquik.nearby.orderList.OrderListFragment
 import org.json.JSONObject
@@ -98,6 +99,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    @SuppressLint("InflateParams")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
         MainActivity.changeToolbarTitle("Profile")

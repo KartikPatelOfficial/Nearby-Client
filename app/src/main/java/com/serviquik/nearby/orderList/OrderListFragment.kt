@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.serviquik.nearby.orderList
 
 import android.app.ProgressDialog

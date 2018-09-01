@@ -19,20 +19,10 @@ import com.serviquik.nearby.customer.ManageCustomerFragment
 import com.serviquik.nearby.manageProduct.Product
 import android.widget.Toast
 import android.content.Intent
-import android.os.Environment
 import com.google.firebase.Timestamp
-import com.itextpdf.text.*
-import com.itextpdf.text.pdf.PdfWriter
-import java.io.FileOutputStream
 import java.util.*
 import kotlin.collections.HashMap
-import com.itextpdf.text.pdf.draw.LineSeparator
-import com.itextpdf.text.Paragraph
-import com.itextpdf.text.pdf.PdfPCell
-import com.itextpdf.text.pdf.PdfPTable
 import com.serviquik.nearby.MainActivity
-import java.io.File
-import java.text.SimpleDateFormat
 
 
 @SuppressLint("StaticFieldLeak")

@@ -38,5 +38,5 @@ class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val nameTV: TextView = view.findViewById(R.id.reviewCardName)
     val reviewTV: TextView = view.findViewById(R.id.reviewCardreview)
     val ratingBar: RatingBar = view.findViewById(R.id.reviewCardRatingBar)
-    val dateTV = view.findViewById<TextView>(R.id.reviewCardTime)
+    val dateTV = view.findViewById<TextView>(R.id.reviewCardTime)!!
 }

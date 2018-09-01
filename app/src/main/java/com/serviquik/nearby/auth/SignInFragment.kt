@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.serviquik.nearby.auth
 
 import android.app.Dialog

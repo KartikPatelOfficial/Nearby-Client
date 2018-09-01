@@ -1,4 +1,4 @@
-package com.serviquik.nearby
+package com.serviquik.nearby.category
 
 import com.google.firebase.firestore.CollectionReference
 

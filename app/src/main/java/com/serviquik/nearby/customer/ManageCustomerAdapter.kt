@@ -45,7 +45,7 @@ class ManageCustomerAdapter(private val customers: ArrayList<Customer>, private 
     override fun onBindViewHolder(p0: ManageCustomerViewHolder, p1: Int) {
         val customer = customers[p1]
         val index = Random().nextInt(colors.size)
-        p0.backgroud.setCardBackgroundColor(Color.parseColor(colors[index]))
+        p0.background.setCardBackgroundColor(Color.parseColor(colors[index]))
         p0.nameTV.text = customer.name
         p0.typeTV.text = getTpe(customer.isLocal)
         p0.moreBtn.setOnClickListener { _ ->
@@ -61,7 +61,7 @@ class ManageCustomerAdapter(private val customers: ArrayList<Customer>, private 
             popupMenu.show()
         }
 
-        p0.backgroud.setOnClickListener {
+        p0.background.setOnClickListener {
             val bundle = Bundle()
             bundle.putBoolean("isClient",true)
             bundle.putString("CID",customer.cid)
@@ -119,5 +119,5 @@ class ManageCustomerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val nameTV = view.findViewById<TextView>(R.id.cardCustomerName)!!
     val typeTV = view.findViewById<TextView>(R.id.cardCustomerType)!!
     val moreBtn = view.findViewById<ImageButton>(R.id.cardCustomerMore)!!
-    val backgroud = view.findViewById<MaterialCardView>(R.id.cardCustomerBack)
+    val background = view.findViewById<MaterialCardView>(R.id.cardCustomerBack)!!
 }

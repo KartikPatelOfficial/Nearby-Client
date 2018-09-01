@@ -1,4 +1,4 @@
-package com.serviquik.nearby
+package com.serviquik.nearby.category
 
 data class Category(
         val name: String,

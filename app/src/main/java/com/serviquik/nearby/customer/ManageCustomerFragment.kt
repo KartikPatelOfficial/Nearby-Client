@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.serviquik.nearby.customer
 
 
@@ -47,7 +49,7 @@ class ManageCustomerFragment : Fragment() {
         progressDialog.setCanceledOnTouchOutside(false)
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "InflateParams")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_manage_customer, container, false)
 
@@ -80,8 +82,8 @@ class ManageCustomerFragment : Fragment() {
         view.findViewById<View>(R.id.manageCustomerRecyclerViewFAB).setOnClickListener { _ ->
             val inflater1 = LayoutInflater.from(context!!)
             val dialog = inflater1.inflate(R.layout.fragment_sign_in, null)
-            val dialogeBuilder = AlertDialog.Builder(context!!)
-            dialogeBuilder.setView(dialog)
+            val dialogBuilder = AlertDialog.Builder(context!!)
+            dialogBuilder.setView(dialog)
 
             dialog.findViewById<TextView>(R.id.signInTitleTV).text = "Fill detail"
             val editText = dialog.findViewById<EditText>(R.id.signInPhoneET)
@@ -91,7 +93,7 @@ class ManageCustomerFragment : Fragment() {
             val button = dialog.findViewById<Button>(R.id.loginVerifyBtn)
             button.visibility = View.GONE
             button.text = "Next"
-            dialogeBuilder.setPositiveButton("Next") { _, _ ->
+            dialogBuilder.setPositiveButton("Next") { _, _ ->
                 number = editText.text.toString()
                 if (TextUtils.isEmpty(number)) {
                     editText.error = "Please enter mobile number"
@@ -127,13 +129,14 @@ class ManageCustomerFragment : Fragment() {
                     }
                 }
             }
-            dialogeBuilder.create().show()
+            dialogBuilder.create().show()
 
         }
 
         return view
     }
 
+    @SuppressLint("InflateParams")
     private fun otherDialog() {
         val inflater = LayoutInflater.from(context!!)
         val dialog = inflater.inflate(R.layout.get_local_detail, null)

@@ -13,19 +13,19 @@ data class Order(var name: String = "Name",
 ) {
 
     companion object {
-        val PROGRESSED = 0
-        val APPROVED = 1
-        val PENDING = 2
-        val CANCELLED = 3
-        val REJECTED = 4
-        val COMPLETED = 5
+        const val PROGRESSED = 0
+        const val APPROVED = 1
+        const val PENDING = 2
+        const val CANCELLED = 3
+        const val REJECTED = 4
+        const val COMPLETED = 5
 
-        val PROGRESSEDCOLOR = "#FBC02D"
-        val APPROVEDCOLOR = "#03A9F4"
-        val PENDINGCOLOR = "#E91E63"
-        val CANCELLEDCOLOR = "#FF5722"
-        val REJECTEDCOLOR = "#F44336"
-        val COMPLETEDCOLOR = "#00C853"
+        const val PROGRESSEDCOLOR = "#FBC02D"
+        const val APPROVEDCOLOR = "#03A9F4"
+        const val PENDINGCOLOR = "#E91E63"
+        const val CANCELLEDCOLOR = "#FF5722"
+        const val REJECTEDCOLOR = "#F44336"
+        const val COMPLETEDCOLOR = "#00C853"
 
     }
 }

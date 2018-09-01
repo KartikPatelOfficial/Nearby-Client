@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.serviquik.nearby.offer
 
 import android.app.ProgressDialog
@@ -13,7 +15,6 @@ import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.serviquik.nearby.R
-import com.serviquik.nearby.manageProduct.Viewholder
 import com.squareup.picasso.Picasso
 
 class OfferAdapter(private val offers: ArrayList<Offer>, private val context: Context) : RecyclerView.Adapter<OfferViewHolder>() {

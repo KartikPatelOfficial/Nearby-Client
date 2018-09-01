@@ -1,4 +1,4 @@
-@file:Suppress("UNUSED_VARIABLE")
+@file:Suppress("UNUSED_VARIABLE", "DEPRECATION")
 
 package com.serviquik.nearby.manageProduct
 
@@ -24,8 +24,8 @@ import com.serviquik.nearby.R
 import android.widget.AdapterView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
-import com.serviquik.nearby.Category
-import com.serviquik.nearby.GetCategories
+import com.serviquik.nearby.category.Category
+import com.serviquik.nearby.category.GetCategories
 import com.serviquik.nearby.profile.ImageFilePath
 import com.squareup.okhttp.*
 import org.json.JSONObject
@@ -144,7 +144,7 @@ class ManageProductsFragment : Fragment() {
                                 }
                                 val childArrAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_dropdown_item, catList)
                                 childSpinner.adapter = childArrAdapter
-                                childSpinner.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                childSpinner.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                                 linearLayout.addView(childSpinner)
                             }
                         }
