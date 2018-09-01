@@ -50,6 +50,7 @@ class BillAdapter(private val products: ArrayList<Product>, val context: Context
             BillFragment.adapter!!.notifyItemChanged(p1 + 1)
             BillFragment.total = BillFragment.makeTotal(price, quantity)
             BillFragment.totalText.text = "₹ ${BillFragment.total}"
+            BillFragment.sendBtn.isEnabled = true
         }
     }
 }

@@ -50,6 +50,7 @@ class BillFragment : Fragment() {
         var adapter: BillAdapter? = null
 
         lateinit var totalText: TextView
+        lateinit var sendBtn: Button
 
         fun makeTotal(price: Long, quantity: Int): Long {
             return total + (price * quantity)
@@ -83,7 +84,10 @@ class BillFragment : Fragment() {
         totalText = view.findViewById(R.id.billTotalTV)
         totalText.text = text
 
-        view.findViewById<Button>(R.id.billSendBillBtn).setOnClickListener {
+        sendBtn = view.findViewById(R.id.billSendBillBtn)
+        sendBtn.isEnabled = false
+
+        sendBtn.setOnClickListener {
             sendToDatabase()
         }
 
