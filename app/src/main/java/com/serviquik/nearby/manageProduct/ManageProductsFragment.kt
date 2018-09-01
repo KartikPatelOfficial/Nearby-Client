@@ -23,17 +23,22 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.serviquik.nearby.R
 import android.widget.AdapterView
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.CollectionReference
+import com.serviquik.nearby.Category
+import com.serviquik.nearby.GetCategories
 import com.serviquik.nearby.profile.ImageFilePath
 import com.squareup.okhttp.*
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ManageProductsFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
+    var subCategoryRef: CollectionReference? = null
     private val auth = FirebaseAuth.getInstance()!!
     private val products = ArrayList<Product>()
 
@@ -62,17 +67,18 @@ class ManageProductsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
-        val arrayList = ArrayList<String>()
+        val arrayList = ArrayList<Category>()
 
         progressDialog.show()
 
         db.collection("Vendors").document(auth.uid!!).get().addOnCompleteListener { rootIt ->
             if (rootIt.isSuccessful) {
                 val category = rootIt.result.getString("Category")
-                db.collection("Categories").document(category!!).collection("Subcategories").get().addOnCompleteListener {
+                subCategoryRef = db.collection("Categories").document(category!!).collection("SubCategory")
+                subCategoryRef!!.whereEqualTo("Id", "0").get().addOnCompleteListener {
                     if (it.isSuccessful) {
                         for (doc in it.result) {
-                            arrayList.add(doc.id)
+                            arrayList.add(Category(doc.getString("Name")!!, doc.id))
                         }
                     }
                 }
@@ -92,6 +98,7 @@ class ManageProductsFragment : Fragment() {
             val priceEt = dialog.findViewById<EditText>(R.id.productAddPrice)
             val spinner: Spinner = dialog.findViewById(R.id.productAddSpinner)
             val imageRecyclerView: RecyclerView = dialog.findViewById(R.id.productAddRVImage)
+            val linearLayout:LinearLayout = dialog.findViewById(R.id.productAddSpinnerLayout)
 
             dialog.findViewById<Button>(R.id.productAddSelectImage).setOnClickListener {
                 val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -102,15 +109,44 @@ class ManageProductsFragment : Fragment() {
             bottomAdapter = ProductBottomAdapter(imagePaths)
             imageRecyclerView.adapter = bottomAdapter
 
-            val arrayAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_dropdown_item, arrayList)
+            val strings = ArrayList<String>()
+            for (str in arrayList) {
+                strings.add(str.name)
+            }
+
+            val arrayAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_dropdown_item, strings)
             spinner.adapter = arrayAdapter
 
             var category: String? = null
 
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
+
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    category = arrayList[p2]
+                    progressDialog.show()
+
+                    val categoryClass = GetCategories(subCategoryRef!!, arrayList[p2].id)
+                    categoryClass.getCategory()
+                    categoryClass.listener = object : GetCategories.CategoryListner {
+                        override fun onGetCategory(categories: ArrayList<Category>?) {
+                            progressDialog.dismiss()
+                            if (categories==null) {
+                                category = strings[p2]
+                            } else {
+                                val childSpinner = Spinner(context!!)
+                                val catList = ArrayList<String>()
+                                for (cat in categories) {
+                                    catList.add(cat.name)
+                                }
+                                val childArrAdapter = ArrayAdapter<String>(context!!, android.R.layout.simple_spinner_dropdown_item, catList)
+                                childSpinner.adapter = childArrAdapter
+                                childSpinner.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                linearLayout.addView(childSpinner)
+                            }
+                        }
+
+                    }
+
                 }
             }
             dialogeBuilder.setPositiveButton("OK") { _, _ ->
