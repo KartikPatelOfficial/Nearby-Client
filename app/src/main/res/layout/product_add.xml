@@ -7,7 +7,6 @@
 
 
     <LinearLayout
-        android:id="@+id/productAddSpinnerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -31,6 +30,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/category" />
+
+        <LinearLayout
+            android:id="@+id/productAddSpinnerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
     </LinearLayout>
 

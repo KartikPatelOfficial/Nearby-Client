@@ -98,7 +98,7 @@ class ManageProductsFragment : Fragment() {
             val priceEt = dialog.findViewById<EditText>(R.id.productAddPrice)
             val spinner: Spinner = dialog.findViewById(R.id.productAddSpinner)
             val imageRecyclerView: RecyclerView = dialog.findViewById(R.id.productAddRVImage)
-            val linearLayout:LinearLayout = dialog.findViewById(R.id.productAddSpinnerLayout)
+            val linearLayout: LinearLayout = dialog.findViewById(R.id.productAddSpinnerLayout)
 
             dialog.findViewById<Button>(R.id.productAddSelectImage).setOnClickListener {
                 val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -125,12 +125,16 @@ class ManageProductsFragment : Fragment() {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     progressDialog.show()
 
+                    if (linearLayout.childCount != 0) {
+                        linearLayout.removeAllViews()
+                    }
+
                     val categoryClass = GetCategories(subCategoryRef!!, arrayList[p2].id)
                     categoryClass.getCategory()
                     categoryClass.listener = object : GetCategories.CategoryListner {
                         override fun onGetCategory(categories: ArrayList<Category>?) {
                             progressDialog.dismiss()
-                            if (categories==null) {
+                            if (categories == null) {
                                 category = strings[p2]
                             } else {
                                 val childSpinner = Spinner(context!!)
